@@ -1,4 +1,4 @@
-# Packer Plugin Scaffolding
+# Packer Plugin Power VS
 
 This repository is a template for a Packer multi-component plugin. It is intended as a starting point for creating Packer plugins, containing:
 - A builder ([builder/scaffolding](builder/scaffolding))

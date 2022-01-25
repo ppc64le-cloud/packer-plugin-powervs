@@ -1,4 +1,4 @@
-package scaffolding
+package powervs
 
 // packersdk.Artifact implementation
 type Artifact struct {

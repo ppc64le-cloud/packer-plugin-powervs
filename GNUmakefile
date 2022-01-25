@@ -1,4 +1,4 @@
-NAME=scaffolding
+NAME=powervs
 BINARY=packer-plugin-${NAME}
 
 COUNT?=1

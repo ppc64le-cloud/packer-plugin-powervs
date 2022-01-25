@@ -1,4 +1,4 @@
-module packer-plugin-scaffolding
+module github.com/ppc64le-cloud/packer-plugin-powervs
 
 go 1.17
 

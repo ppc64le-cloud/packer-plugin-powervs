@@ -1,4 +1,4 @@
-package scaffolding
+package powervs
 
 import (
 	_ "embed"
@@ -13,20 +13,20 @@ import (
 )
 
 //go:embed test-fixtures/template.pkr.hcl
-var testPostProcessorHCL2Basic string
+var testDatasourceHCL2Basic string
 
-// Run with: PACKER_ACC=1 go test -count 1 -v ./post-processor/scaffolding/post-processor_acc_test.go  -timeout=120m
-func TestAccScaffoldingPostProcessor(t *testing.T) {
+// Run with: PACKER_ACC=1 go test -count 1 -v ./datasource/scaffolding/data_acc_test.go  -timeout=120m
+func TestAccScaffoldingDatasource(t *testing.T) {
 	testCase := &acctest.PluginTestCase{
-		Name: "scaffolding_post-processor_basic_test",
+		Name: "scaffolding_datasource_basic_test",
 		Setup: func() error {
 			return nil
 		},
 		Teardown: func() error {
 			return nil
 		},
-		Template: testPostProcessorHCL2Basic,
-		Type:     "scaffolding-my-post-processor",
+		Template: testDatasourceHCL2Basic,
+		Type:     "scaffolding-my-datasource",
 		Check: func(buildCommand *exec.Cmd, logfile string) error {
 			if buildCommand.ProcessState != nil {
 				if buildCommand.ProcessState.ExitCode() != 0 {
@@ -46,9 +46,14 @@ func TestAccScaffoldingPostProcessor(t *testing.T) {
 			}
 			logsString := string(logsBytes)
 
-			postProcessorOutputLog := "post-processor mock: my-mock-config"
-			if matched, _ := regexp.MatchString(postProcessorOutputLog+".*", logsString); !matched {
+			fooLog := "null.basic-example: foo: foo-value"
+			barLog := "null.basic-example: bar: bar-value"
+
+			if matched, _ := regexp.MatchString(fooLog+".*", logsString); !matched {
 				t.Fatalf("logs doesn't contain expected foo value %q", logsString)
+			}
+			if matched, _ := regexp.MatchString(barLog+".*", logsString); !matched {
+				t.Fatalf("logs doesn't contain expected bar value %q", logsString)
 			}
 			return nil
 		},
