@@ -62,13 +62,13 @@ jobs:
     steps:
       - checkout
       - run: go test -count 1 ./... -coverprofile=coverage.txt -covermode=atomic -timeout=3m
-  test-darwin:
-    executor: darwin
-    working_directory: ~/go/github.com/hashicorp/packer-plugin-powervs
-    steps:
-      - install-go-run-tests-unix:
-          GOOS: darwin
-          GOVERSION: "1.17"
+#  test-darwin:
+#    executor: darwin
+#    working_directory: ~/go/github.com/hashicorp/packer-plugin-powervs
+#    steps:
+#      - install-go-run-tests-unix:
+#          GOOS: darwin
+#          GOVERSION: "1.17"
   test-windows:
     executor:
       name: win/vs2019
@@ -175,7 +175,7 @@ workflows:
   test:
     jobs:
       - test-linux
-      - test-darwin
+#      - test-darwin
       - test-windows
   check-code:
     jobs:
