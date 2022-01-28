@@ -21,8 +21,7 @@ var (
 )
 
 type StepCaptureInstance struct {
-	Capture   common.Capture
-	doCleanup bool
+	Capture common.Capture
 }
 
 func (s *StepCaptureInstance) Run(_ context.Context, state multistep.StateBag) multistep.StepAction {

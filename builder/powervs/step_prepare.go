@@ -17,7 +17,6 @@ const (
 )
 
 type StepPrepare struct {
-	doCleanup bool
 }
 
 func (s *StepPrepare) Run(_ context.Context, state multistep.StateBag) multistep.StepAction {
