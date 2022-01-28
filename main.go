@@ -14,10 +14,10 @@ import (
 
 func main() {
 	pps := plugin.NewSet()
-	pps.RegisterBuilder("my-builder", new(powervs.Builder))
-	pps.RegisterProvisioner("my-provisioner", new(powervsProv.Provisioner))
-	pps.RegisterPostProcessor("my-post-processor", new(powervsPP.PostProcessor))
-	pps.RegisterDatasource("my-datasource", new(powervsData.Datasource))
+	pps.RegisterBuilder(plugin.DEFAULT_NAME, new(powervs.Builder))
+	pps.RegisterProvisioner(plugin.DEFAULT_NAME, new(powervsProv.Provisioner))
+	pps.RegisterPostProcessor(plugin.DEFAULT_NAME, new(powervsPP.PostProcessor))
+	pps.RegisterDatasource(plugin.DEFAULT_NAME, new(powervsData.Datasource))
 	pps.SetVersion(powervsVersion.PluginVersion)
 	err := pps.Run()
 	if err != nil {
