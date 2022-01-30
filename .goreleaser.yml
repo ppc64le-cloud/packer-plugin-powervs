@@ -42,11 +42,18 @@ builds:
       - '386'
       - arm
       - arm64
+      - ppc64le
     ignore:
       - goos: darwin
         goarch: '386'
       - goos: linux
         goarch: amd64
+      - goos: freebsd
+        goarch: ppc64le
+      - goos: windows
+        goarch: ppc64le
+      - goos: darwin
+        goarch: ppc64le
     binary: '{{ .ProjectName }}_v{{ .Version }}_{{ .Env.API_VERSION }}_{{ .Os }}_{{ .Arch }}'
 archives:
 - format: zip
