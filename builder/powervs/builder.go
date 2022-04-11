@@ -1,3 +1,4 @@
+//go:generate packer-sdc struct-markdown
 //go:generate packer-sdc mapstructure-to-hcl2 -type Config
 
 package powervs
@@ -12,11 +13,10 @@ import (
 	"github.com/hashicorp/packer-plugin-sdk/packer"
 	"github.com/hashicorp/packer-plugin-sdk/template/config"
 	"github.com/hashicorp/packer-plugin-sdk/template/interpolate"
-
 	powervscommon "github.com/ppc64le-cloud/packer-plugin-powervs/builder/powervs/common"
 )
 
-const BuilderId = "powervs.builder"
+const BuilderId = "packer.builder.powervs"
 
 type Config struct {
 	common.PackerConfig        `mapstructure:",squash"`
@@ -36,9 +36,11 @@ type Builder struct {
 func (b *Builder) ConfigSpec() hcldec.ObjectSpec { return b.config.FlatMapstructure().HCL2Spec() }
 
 func (b *Builder) Prepare(raws ...interface{}) (generatedVars []string, warnings []string, err error) {
+	b.config.ctx.Funcs = powervscommon.TemplateFuncs
 	err = config.Decode(&b.config, &config.DecodeOpts{
-		PluginType:  "packer.builder.powervs",
-		Interpolate: true,
+		PluginType:         BuilderId,
+		Interpolate:        true,
+		InterpolateContext: &b.config.ctx,
 	}, raws...)
 	if err != nil {
 		return nil, nil, err
