@@ -17,6 +17,7 @@
             "mock": "mock",
             "source": {
                 "name": "my-image",
+                "import": true,
                 "cos": {
                     "bucket": "power-oss-bucket",
                     "object": "capibm-powervs-centos-streams8-1-22-4.ova.gz",
