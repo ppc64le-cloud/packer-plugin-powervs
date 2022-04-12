@@ -4,8 +4,6 @@ package powervs
 
 import (
 	"context"
-	"fmt"
-
 	"github.com/hashicorp/hcl/v2/hcldec"
 	"github.com/hashicorp/packer-plugin-sdk/packer"
 	"github.com/hashicorp/packer-plugin-sdk/template/config"
@@ -13,8 +11,7 @@ import (
 )
 
 type Config struct {
-	MockOption string `mapstructure:"mock"`
-	ctx        interpolate.Context
+	ctx interpolate.Context
 }
 
 type Provisioner struct {
@@ -41,6 +38,5 @@ func (p *Provisioner) Prepare(raws ...interface{}) error {
 }
 
 func (p *Provisioner) Provision(_ context.Context, ui packer.Ui, _ packer.Communicator, generatedData map[string]interface{}) error {
-	ui.Say(fmt.Sprintf("provisioner mock: %s", p.config.MockOption))
 	return nil
 }
