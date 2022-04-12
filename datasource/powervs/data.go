@@ -9,7 +9,6 @@ import (
 )
 
 type Config struct {
-	MockOption string `mapstructure:"mock"`
 }
 
 type Datasource struct {

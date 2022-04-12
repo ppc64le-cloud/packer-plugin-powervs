@@ -23,7 +23,6 @@ type Config struct {
 	powervscommon.AccessConfig `mapstructure:",squash"`
 	powervscommon.ImageConfig  `mapstructure:",squash"`
 	powervscommon.RunConfig    `mapstructure:",squash"`
-	MockOption                 string `mapstructure:"mock"`
 
 	ctx interpolate.Context
 }
@@ -56,10 +55,7 @@ func (b *Builder) Prepare(raws ...interface{}) (generatedVars []string, warnings
 	packer.LogSecretFilter.Set(b.config.Capture.COS.AccessKey)
 	packer.LogSecretFilter.Set(b.config.Capture.COS.SecretKey)
 
-	// Return the placeholder for the generated data that will become available to provisioners and post-processors.
-	// If the builder doesn't generate any data, just return an empty slice of string: []string{}
-	buildGeneratedData := []string{"GeneratedMockData"}
-	return buildGeneratedData, nil, nil
+	return []string{}, nil, nil
 }
 
 func (b *Builder) Run(ctx context.Context, ui packer.Ui, hook packer.Hook) (packer.Artifact, error) {
@@ -91,9 +87,6 @@ func (b *Builder) Run(ctx context.Context, ui packer.Ui, hook packer.Hook) (pack
 	var steps []multistep.Step
 
 	steps = append(steps,
-		&StepSayConfig{
-			MockConfig: b.config.MockOption,
-		},
 		&StepImageBaseImage{
 			Source: b.config.Source,
 		},
@@ -124,12 +117,6 @@ func (b *Builder) Run(ctx context.Context, ui packer.Ui, hook packer.Hook) (pack
 	state.Put("jobClient", jobClient)
 	state.Put("instanceClient", instanceClient)
 	state.Put("networkClient", networkClient)
-
-	// Set the value of the generated data that will become available to provisioners.
-	// To share the data with post-processors, use the StateData in the artifact.
-	state.Put("generated_data", map[string]interface{}{
-		"GeneratedMockData": "mock-build-data",
-	})
 
 	// Run!
 	b.runner = commonsteps.NewRunner(steps, b.config.PackerConfig, ui)
