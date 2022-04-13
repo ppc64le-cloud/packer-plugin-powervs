@@ -9,8 +9,7 @@ import (
 )
 
 type Source struct {
-	Name       string      `mapstructure:"name" required:"true"`
-	Import     bool        `mapstructure:"import" required:"false"`
+	Name       string      `mapstructure:"name" required:"false"`
 	COS        *COS        `mapstructure:"cos" required:"false"`
 	StockImage *StockImage `mapstructure:"stock_image" required:"false"`
 }

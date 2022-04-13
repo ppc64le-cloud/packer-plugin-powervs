@@ -40,6 +40,7 @@ func (s *StepCreateInstance) Run(_ context.Context, state multistep.StateBag) mu
 		ProcType:    core.StringPtr("shared"),
 		Processors:  core.Float64Ptr(0.5),
 		ServerName:  &s.InstanceName,
+		StorageType: *imageRef.StorageType,
 	}
 	ui.Message("Creating Instance")
 	ins, err := instanceClient.Create(body)
