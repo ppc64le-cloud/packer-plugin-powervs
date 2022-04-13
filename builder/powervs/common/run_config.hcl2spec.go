@@ -91,8 +91,7 @@ func (*FlatCaptureCOS) HCL2Spec() map[string]hcldec.Spec {
 // FlatSource is an auto-generated flat version of Source.
 // Where the contents of a field with a `mapstructure:,squash` tag are bubbled up.
 type FlatSource struct {
-	Name       *string         `mapstructure:"name" required:"true" cty:"name" hcl:"name"`
-	Import     *bool           `mapstructure:"import" required:"false" cty:"import" hcl:"import"`
+	Name       *string         `mapstructure:"name" required:"false" cty:"name" hcl:"name"`
 	COS        *FlatCOS        `mapstructure:"cos" required:"false" cty:"cos" hcl:"cos"`
 	StockImage *FlatStockImage `mapstructure:"stock_image" required:"false" cty:"stock_image" hcl:"stock_image"`
 }
@@ -110,7 +109,6 @@ func (*Source) FlatMapstructure() interface{ HCL2Spec() map[string]hcldec.Spec }
 func (*FlatSource) HCL2Spec() map[string]hcldec.Spec {
 	s := map[string]hcldec.Spec{
 		"name":        &hcldec.AttrSpec{Name: "name", Type: cty.String, Required: false},
-		"import":      &hcldec.AttrSpec{Name: "import", Type: cty.Bool, Required: false},
 		"cos":         &hcldec.BlockSpec{TypeName: "cos", Nested: hcldec.ObjectSpec((*FlatCOS)(nil).HCL2Spec())},
 		"stock_image": &hcldec.BlockSpec{TypeName: "stock_image", Nested: hcldec.ObjectSpec((*FlatStockImage)(nil).HCL2Spec())},
 	}

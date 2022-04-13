@@ -1,0 +1,46 @@
+{
+    "variables":
+        {
+            "apikey": "",
+            "access_key": "",
+            "secret_key": "",
+            "shellpath": "packages.sh"
+        },
+    "builders":[
+        {
+            "type": "powervs",
+            "api_key": "{{user `apikey`}}",
+            "debug": true,
+            "account_id": "65b64c1f1c29460e8c2e4bbfbd893c2c",
+            "service_instance_id": "97ff60d4-5b60-4a3d-bb28-34aedc603bf3",
+            "region": "lon",
+            "zone": "lon04",
+            "source": {
+                "name": "my-image",
+                "stock_image": {
+                    "name": "CentOS-Stream-8"
+                }
+            },
+            "instance_name": "quick-start-{{timestamp}}",
+            "key_pair_name": "mkumatag-pub-key",
+            "ssh_username": "root",
+            "ssh_private_key_file": "/Users/manjunath/.ssh/id_rsa",
+            "ssh_timeout": "30m",
+            "capture": {
+                "name": "target-image-1",
+                "cos": {
+                    "bucket": "power-oss-bucket",
+                    "region": "us-south",
+                    "access_key": "{{user `access_key`}}",
+                    "secret_key": "{{user `secret_key`}}"
+                }
+            }
+        }
+    ],
+    "provisioners":[
+        {
+            "type": "shell",
+            "script": "{{user `shellpath`}}"
+        }
+    ]
+}
