@@ -11,9 +11,7 @@
             "type": "powervs",
             "api_key": "{{user `apikey`}}",
             "debug": true,
-            "account_id": "65b64c1f1c29460e8c2e4bbfbd893c2c",
             "service_instance_id": "97ff60d4-5b60-4a3d-bb28-34aedc603bf3",
-            "region": "lon",
             "zone": "lon04",
             "source": {
                 "name": "my-image",

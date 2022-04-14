@@ -4,9 +4,12 @@ package common
 
 import (
 	"context"
+	"fmt"
+
 	"github.com/IBM-Cloud/power-go-client/clients/instance"
 	ps "github.com/IBM-Cloud/power-go-client/ibmpisession"
 	"github.com/IBM/go-sdk-core/v5/core"
+	"github.com/IBM/platform-services-go-sdk/iamidentityv1"
 )
 
 type AccessConfig struct {
@@ -14,13 +17,13 @@ type AccessConfig struct {
 	APIKey string `mapstructure:"api_key" required:"true"`
 
 	// Region of a Power VS.
-	Region string `mapstructure:"region" required:"true"`
+	Region string `mapstructure:"region" required:"false"`
 
 	// Zone of a Power VS.
 	Zone string `mapstructure:"zone" required:"true"`
 
 	// Account ID of a IBM Cloud account.
-	AccountID string `mapstructure:"account_id" required:"true"`
+	AccountID string `mapstructure:"account_id" required:"false"`
 
 	// Enable debug logging, Default `false`.
 	Debug bool `mapstructure:"debug" required:"false"`
@@ -31,9 +34,42 @@ type AccessConfig struct {
 	session *ps.IBMPISession
 }
 
-func (c *AccessConfig) Session() (*ps.IBMPISession, error) {
+func getAccount(apikey string) (accountID string, err error) {
+	authenticator := &core.IamAuthenticator{
+		ApiKey: apikey,
+	}
+	iamv1, err := iamidentityv1.NewIamIdentityV1(&iamidentityv1.IamIdentityV1Options{Authenticator: authenticator})
+	if err != nil {
+		return
+	}
+
+	apiKeyDetailsOpt := iamidentityv1.GetAPIKeysDetailsOptions{IamAPIKey: &apikey}
+	apiKey, _, err := iamv1.GetAPIKeysDetails(&apiKeyDetailsOpt)
+	if err != nil {
+		return
+	}
+	if apiKey == nil {
+		err = fmt.Errorf("could retrieve account id")
+		return
+	}
+
+	accountID = *apiKey.AccountID
+	return
+}
+
+func (c *AccessConfig) Session() (_ *ps.IBMPISession, err error) {
 	if c.session != nil {
 		return c.session, nil
+	}
+
+	accountID := ""
+	if c.AccountID != "" {
+		accountID = c.AccountID
+	} else {
+		accountID, err = getAccount(c.APIKey)
+		if err != nil {
+			return
+		}
 	}
 
 	authenticator := &core.IamAuthenticator{
@@ -41,7 +77,7 @@ func (c *AccessConfig) Session() (*ps.IBMPISession, error) {
 	}
 	options := &ps.IBMPIOptions{
 		Authenticator: authenticator,
-		UserAccount:   c.AccountID,
+		UserAccount:   accountID,
 		Region:        c.Region,
 		Zone:          c.Zone,
 		Debug:         c.Debug,

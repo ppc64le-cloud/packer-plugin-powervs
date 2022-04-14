@@ -20,9 +20,9 @@ type FlatConfig struct {
 	PackerUserVars            map[string]string   `mapstructure:"packer_user_variables" cty:"packer_user_variables" hcl:"packer_user_variables"`
 	PackerSensitiveVars       []string            `mapstructure:"packer_sensitive_variables" cty:"packer_sensitive_variables" hcl:"packer_sensitive_variables"`
 	APIKey                    *string             `mapstructure:"api_key" required:"true" cty:"api_key" hcl:"api_key"`
-	Region                    *string             `mapstructure:"region" required:"true" cty:"region" hcl:"region"`
+	Region                    *string             `mapstructure:"region" required:"false" cty:"region" hcl:"region"`
 	Zone                      *string             `mapstructure:"zone" required:"true" cty:"zone" hcl:"zone"`
-	AccountID                 *string             `mapstructure:"account_id" required:"true" cty:"account_id" hcl:"account_id"`
+	AccountID                 *string             `mapstructure:"account_id" required:"false" cty:"account_id" hcl:"account_id"`
 	Debug                     *bool               `mapstructure:"debug" required:"false" cty:"debug" hcl:"debug"`
 	ServiceInstanceID         *string             `mapstructure:"service_instance_id" required:"true" cty:"service_instance_id" hcl:"service_instance_id"`
 	InstanceName              *string             `mapstructure:"instance_name" required:"true" cty:"instance_name" hcl:"instance_name"`
