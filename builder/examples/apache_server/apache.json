@@ -10,13 +10,10 @@
         {
             "type": "powervs",
             "api_key": "{{user `apikey`}}",
-            "account_id": "65b64c1f1c29460e8c2e4bbfbd893c2c",
             "service_instance_id": "97ff60d4-5b60-4a3d-bb28-34aedc603bf3",
-            "region": "lon",
             "zone": "lon04",
             "source": {
                 "name": "my-image",
-                "import": true,
                 "cos": {
                     "bucket": "power-oss-bucket",
                     "object": "capibm-powervs-centos-streams8-1-22-4.ova.gz",
