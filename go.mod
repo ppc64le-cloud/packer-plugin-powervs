@@ -6,7 +6,7 @@ require (
 	github.com/IBM-Cloud/power-go-client v1.1.12
 	github.com/IBM/go-sdk-core/v5 v5.10.2
 	github.com/IBM/platform-services-go-sdk v0.28.2
-	github.com/hashicorp/hcl/v2 v2.13.0
+	github.com/hashicorp/hcl/v2 v2.14.0
 	github.com/hashicorp/packer-plugin-sdk v0.3.1
 	github.com/zclconf/go-cty v1.10.0
 )
