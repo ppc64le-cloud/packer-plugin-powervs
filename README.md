@@ -84,7 +84,7 @@ Once the first `docs.zip` file has been included into a release you will need to
 # Requirements
 
 -	[packer-plugin-sdk](https://github.com/hashicorp/packer-plugin-sdk) >= v0.2.9
--	[Go](https://golang.org/doc/install) >= 1.17
+-	[Go](https://golang.org/doc/install) >= 1.18
 
 ## Packer Compatibility
 This scaffolding template is compatible with Packer >= v1.7.0
