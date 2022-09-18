@@ -1,6 +1,6 @@
 module github.com/ppc64le-cloud/packer-plugin-powervs
 
-go 1.17
+go 1.18
 
 require (
 	github.com/IBM-Cloud/power-go-client v1.2.1
