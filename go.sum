@@ -60,8 +60,8 @@ github.com/IBM-Cloud/power-go-client v1.2.1 h1:21z0hxZLgM9npv6u2IvKCHxhfbwxQM/q8
 github.com/IBM-Cloud/power-go-client v1.2.1/go.mod h1:Qfx0fNi+9hms+xu9Z6Euhu9088ByW6C/TCMLECTRWNE=
 github.com/IBM/go-sdk-core/v5 v5.10.2 h1:bfqhYNwwpJ3zJQSYpF3umhmRIKaa762itvJkTAWCCLU=
 github.com/IBM/go-sdk-core/v5 v5.10.2/go.mod h1:WZPFasUzsKab/2mzt29xPcfruSk5js2ywAPwW4VJjdI=
-github.com/IBM/platform-services-go-sdk v0.28.3 h1:Os6MLVVsheUFnl+7k/mYm8KhiPZxuIG3vaPxDPWjTgo=
-github.com/IBM/platform-services-go-sdk v0.28.3/go.mod h1:jy0Ahvj5Gkkua3Gd7t22bo0GfmHRQaPZcaqwfVgEY7k=
+github.com/IBM/platform-services-go-sdk v0.28.4 h1:awoWU1Zbb2NjuVDjlf2lVNUPwfq+OJEGjIoQwsd8SiA=
+github.com/IBM/platform-services-go-sdk v0.28.4/go.mod h1:jy0Ahvj5Gkkua3Gd7t22bo0GfmHRQaPZcaqwfVgEY7k=
 github.com/Microsoft/go-winio v0.4.15-0.20190919025122-fc70bd9a86b5/go.mod h1:tTuCMEN+UleMWgg9dVx4Hu52b1bJo+59jBh3ajtinzw=
 github.com/Microsoft/hcsshim v0.8.9/go.mod h1:5692vkUqntj1idxauYlpoINNKeqCiG6Sg38RRsjT5y8=
 github.com/OneOfOne/xxhash v1.2.2/go.mod h1:HSdplMjZKSmBqAxg5vPj2TmRDmfkzw+cTzAElWljhcU=
