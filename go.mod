@@ -8,7 +8,7 @@ require (
 	github.com/IBM/platform-services-go-sdk v0.28.5
 	github.com/hashicorp/hcl/v2 v2.14.1
 	github.com/hashicorp/packer-plugin-sdk v0.3.2
-	github.com/zclconf/go-cty v1.10.0
+	github.com/zclconf/go-cty v1.11.1
 )
 
 require (
