@@ -17,7 +17,7 @@ jobs:
     outputs:
       go-version: ${{ steps.get-go-version.outputs.go-version }}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: 'Determine Go version'
         id: get-go-version
         run: |
@@ -28,7 +28,7 @@ jobs:
     needs: get-go-version
     name: Go Mod Tidy
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: actions/setup-go@v3
         with:
           go-version: ${{ needs.get-go-version.outputs.go-version }}
@@ -38,7 +38,7 @@ jobs:
     needs: get-go-version
     name: Go Lint check
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: actions/setup-go@v3
         with:
           go-version: ${{ needs.get-go-version.outputs.go-version }}
@@ -52,7 +52,7 @@ jobs:
     needs: get-go-version
     name: Go fmt check
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: actions/setup-go@v3
         with:
           go-version: ${{ needs.get-go-version.outputs.go-version }}
@@ -69,7 +69,7 @@ jobs:
     needs: get-go-version
     name: Generate check
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: actions/setup-go@v3
         with:
           go-version: ${{ needs.get-go-version.outputs.go-version }}
