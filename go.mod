@@ -3,7 +3,7 @@ module github.com/ppc64le-cloud/packer-plugin-powervs
 go 1.18
 
 require (
-	github.com/IBM-Cloud/power-go-client v1.5.0
+	github.com/IBM-Cloud/power-go-client v1.5.1
 	github.com/IBM/go-sdk-core/v5 v5.14.1
 	github.com/IBM/platform-services-go-sdk v0.51.0
 	github.com/hashicorp/hcl/v2 v2.18.0
@@ -104,7 +104,7 @@ require (
 	go.opentelemetry.io/otel v1.14.0 // indirect
 	go.opentelemetry.io/otel/trace v1.14.0 // indirect
 	golang.org/x/crypto v0.14.0 // indirect
-	golang.org/x/net v0.16.0 // indirect
+	golang.org/x/net v0.17.0 // indirect
 	golang.org/x/oauth2 v0.1.0 // indirect
 	golang.org/x/sys v0.13.0 // indirect
 	golang.org/x/term v0.13.0 // indirect
