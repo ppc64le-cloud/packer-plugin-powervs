@@ -3,12 +3,13 @@ package powervs
 import (
 	"context"
 	"fmt"
+	"time"
+
 	"github.com/IBM-Cloud/power-go-client/clients/instance"
 	"github.com/IBM-Cloud/power-go-client/power/models"
 	"github.com/IBM/go-sdk-core/v5/core"
 	"github.com/hashicorp/packer-plugin-sdk/multistep"
 	packersdk "github.com/hashicorp/packer-plugin-sdk/packer"
-	"time"
 )
 
 type StepCreateInstance struct {
@@ -35,7 +36,7 @@ func (s *StepCreateInstance) Run(_ context.Context, state multistep.StateBag) mu
 	body := &models.PVMInstanceCreate{
 		ImageID:     imageRef.ImageID,
 		KeyPairName: s.KeyPairName,
-		Memory:      core.Float64Ptr(2),
+		Memory:      core.Float64Ptr(4),
 		Networks:    networks,
 		ProcType:    core.StringPtr("shared"),
 		Processors:  core.Float64Ptr(0.5),
