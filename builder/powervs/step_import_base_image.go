@@ -91,7 +91,7 @@ func (s *StepImageBaseImage) Run(_ context.Context, state multistep.StateBag) mu
 				break loop
 			default:
 				if time.Since(begin) >= JobWaitThreshold {
-					ui.Error(fmt.Sprintf("timed out while waiting for image to be imported"))
+					ui.Error("timed out while waiting for image to be imported")
 					return multistep.ActionHalt
 				}
 				ui.Message(fmt.Sprintf("Sleeping for %s Minutes", JobPollInterval))
@@ -143,7 +143,7 @@ func (s *StepImageBaseImage) Run(_ context.Context, state multistep.StateBag) mu
 				break loop2
 			default:
 				if time.Since(begin) >= ImageImportThreshold {
-					ui.Error(fmt.Sprintf("timed out while waiting for image to be imported"))
+					ui.Error("timed out while waiting for image to be imported")
 					return multistep.ActionHalt
 				}
 				ui.Message(fmt.Sprintf("Sleeping for %s Minutes", ImageImportPollInterval))
@@ -163,9 +163,11 @@ func (s *StepImageBaseImage) Run(_ context.Context, state multistep.StateBag) mu
 			imageRef = image
 		}
 	}
-	ui.Message(fmt.Sprintf("Image found with ID: %s", *imageRef.ImageID))
 
 	if imageRef != nil {
+		if imageRef.ImageID != nil {
+			ui.Message(fmt.Sprintf("Image found with ID: %s", *imageRef.ImageID))
+		}
 		state.Put("source_image", imageRef)
 		return multistep.ActionContinue
 	} else {

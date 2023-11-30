@@ -2,10 +2,11 @@ package common
 
 import (
 	"errors"
+	"time"
+
 	"github.com/IBM-Cloud/power-go-client/clients/instance"
 	"github.com/IBM-Cloud/power-go-client/power/models"
 	"github.com/hashicorp/packer-plugin-sdk/multistep"
-	"time"
 )
 
 var (
