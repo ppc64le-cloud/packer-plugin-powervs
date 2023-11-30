@@ -3,12 +3,13 @@ package powervs
 import (
 	"context"
 	"fmt"
+	"time"
+
 	"github.com/IBM-Cloud/power-go-client/clients/instance"
 	"github.com/IBM-Cloud/power-go-client/power/models"
 	"github.com/hashicorp/packer-plugin-sdk/multistep"
 	packersdk "github.com/hashicorp/packer-plugin-sdk/packer"
 	"github.com/ppc64le-cloud/packer-plugin-powervs/builder/powervs/common"
-	"time"
 )
 
 const (
@@ -70,7 +71,7 @@ loop:
 			break loop
 		default:
 			if time.Since(begin) >= CaptureJobWaitThreshold {
-				ui.Error(fmt.Sprintf("timed out while waiting for image to be captured"))
+				ui.Error("timed out while waiting for image to be captured")
 				return multistep.ActionHalt
 			}
 			ui.Message(fmt.Sprintf("Sleeping for %s", CaptureJobPollInterval))
