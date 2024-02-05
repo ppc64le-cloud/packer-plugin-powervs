@@ -121,3 +121,11 @@ func (c *AccessConfig) JobClient(ctx context.Context, id string) (*instance.IBMP
 	}
 	return instance.NewIBMPIJobClient(ctx, session, id), nil
 }
+
+func (c *AccessConfig) DHCPClient(ctx context.Context, id string) (*instance.IBMPIDhcpClient, error) {
+	session, err := c.Session()
+	if err != nil {
+		return nil, err
+	}
+	return instance.NewIBMPIDhcpClient(ctx, session, id), nil
+}
