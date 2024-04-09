@@ -4,7 +4,7 @@ go 1.18
 
 require (
 	github.com/IBM-Cloud/power-go-client v1.6.0
-	github.com/IBM/go-sdk-core/v5 v5.16.3
+	github.com/IBM/go-sdk-core/v5 v5.16.4
 	github.com/IBM/platform-services-go-sdk v0.62.0
 	github.com/hashicorp/hcl/v2 v2.20.0
 	github.com/hashicorp/packer-plugin-sdk v0.4.0
