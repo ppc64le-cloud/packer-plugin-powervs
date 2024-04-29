@@ -5,6 +5,7 @@ package powervs
 
 import (
 	"context"
+
 	"github.com/hashicorp/hcl/v2/hcldec"
 	"github.com/hashicorp/packer-plugin-sdk/common"
 	"github.com/hashicorp/packer-plugin-sdk/communicator"
@@ -84,13 +85,20 @@ func (b *Builder) Run(ctx context.Context, ui packer.Ui, hook packer.Hook) (pack
 		return nil, err
 	}
 
+	dhcpClient, err := b.config.DHCPClient(ctx, b.config.ServiceInstanceID)
+	if err != nil {
+		return nil, err
+	}
+
 	var steps []multistep.Step
 
 	steps = append(steps,
 		&StepImageBaseImage{
 			Source: b.config.Source,
 		},
-		&StepCreateNetwork{},
+		&StepCreateNetwork{
+			DHCPNetwork: b.config.DHCPNetwork,
+		},
 		&StepCreateInstance{
 			InstanceName: b.config.InstanceName,
 			KeyPairName:  b.config.KeyPairName,
@@ -117,6 +125,7 @@ func (b *Builder) Run(ctx context.Context, ui packer.Ui, hook packer.Hook) (pack
 	state.Put("jobClient", jobClient)
 	state.Put("instanceClient", instanceClient)
 	state.Put("networkClient", networkClient)
+	state.Put("dhcpClient", dhcpClient)
 
 	// Run!
 	b.runner = commonsteps.NewRunner(steps, b.config.PackerConfig, ui)
