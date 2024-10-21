@@ -7,7 +7,7 @@ toolchain go1.22.7
 require (
 	github.com/IBM-Cloud/power-go-client v1.8.3
 	github.com/IBM/go-sdk-core/v5 v5.18.0
-	github.com/IBM/platform-services-go-sdk v0.69.2
+	github.com/IBM/platform-services-go-sdk v0.69.3
 	github.com/hashicorp/hcl/v2 v2.22.0
 	github.com/hashicorp/packer-plugin-sdk v0.5.4
 	github.com/zclconf/go-cty v1.13.3
@@ -42,7 +42,7 @@ require (
 	github.com/go-openapi/loads v0.21.3 // indirect
 	github.com/go-openapi/runtime v0.26.0 // indirect
 	github.com/go-openapi/spec v0.20.12 // indirect
-	github.com/go-openapi/strfmt v0.22.1 // indirect
+	github.com/go-openapi/strfmt v0.23.0 // indirect
 	github.com/go-openapi/swag v0.22.5 // indirect
 	github.com/go-openapi/validate v0.22.4 // indirect
 	github.com/go-playground/locales v0.14.1 // indirect
