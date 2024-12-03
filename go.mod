@@ -5,7 +5,7 @@ go 1.22.0
 toolchain go1.22.7
 
 require (
-	github.com/IBM-Cloud/power-go-client v1.8.3
+	github.com/IBM-Cloud/power-go-client v1.9.0
 	github.com/IBM/go-sdk-core/v5 v5.18.1
 	github.com/IBM/platform-services-go-sdk v0.72.0
 	github.com/hashicorp/hcl/v2 v2.23.0
