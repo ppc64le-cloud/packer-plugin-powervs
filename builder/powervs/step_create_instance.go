@@ -61,10 +61,21 @@ func (s *StepCreateInstance) Run(_ context.Context, state multistep.StateBag) mu
 		return multistep.ActionHalt
 	}
 
-	in, err := instanceClient.Get(insIDs[0])
-	if err != nil {
+	var in *models.PVMInstance
+
+	//nolint:staticcheck // SA1015 this disable staticcheck for the next line
+	if err := pollUntil(time.Tick(30*time.Second), time.After(5*time.Minute), func() (bool, error) {
+		in, err = instanceClient.Get(insIDs[0])
+		if err != nil || in == nil {
+			ui.Message("No response or error encountered while retrieving the instance. Retrying...")
+			return false, nil
+		}
+		return true, nil
+	}); err != nil {
 		ui.Error(fmt.Sprintf("failed to get instance: %v", err))
+		return multistep.ActionHalt
 	}
+
 	ui.Message(fmt.Sprintf("Instance Created, Name: %s, ID: %s", *in.ServerName, *in.PvmInstanceID))
 
 	state.Put("instance", in)
