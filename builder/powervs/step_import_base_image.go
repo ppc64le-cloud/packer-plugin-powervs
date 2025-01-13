@@ -163,14 +163,15 @@ func (s *StepImageBaseImage) Run(_ context.Context, state multistep.StateBag) mu
 			imageRef = image
 		}
 	}
-	ui.Message(fmt.Sprintf("Image found with ID: %s", *imageRef.ImageID))
 
-	if imageRef != nil {
-		state.Put("source_image", imageRef)
-		return multistep.ActionContinue
-	} else {
+	if imageRef == nil {
+		ui.Error("failed to find an image")
 		return multistep.ActionHalt
 	}
+
+	ui.Message(fmt.Sprintf("Image found with ID: %s", *imageRef.ImageID))
+	state.Put("source_image", imageRef)
+	return multistep.ActionContinue
 }
 
 // Cleanup can be used to clean up any artifact created by the step.
