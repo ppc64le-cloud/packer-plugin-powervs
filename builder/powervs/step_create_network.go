@@ -20,6 +20,7 @@ const (
 )
 
 type StepCreateNetwork struct {
+	SubnetID    string
 	DHCPNetwork bool
 	doCleanup   bool
 }
@@ -28,6 +29,20 @@ func (s *StepCreateNetwork) Run(_ context.Context, state multistep.StateBag) mul
 	ui := state.Get("ui").(packersdk.Ui)
 
 	networkClient := state.Get("networkClient").(*instance.IBMPINetworkClient)
+
+	if s.SubnetID != "" {
+		ui.Say("The subnet is specified by the user; reuse it instead of creating a new one.")
+		net, err := networkClient.Get(s.SubnetID)
+		if err != nil {
+			ui.Error(fmt.Sprintf("failed to get subnet: %s, error: %v", s.SubnetID, err))
+			return multistep.ActionHalt
+		}
+		ui.Message(fmt.Sprintf("Network found!, Name: %s, ID: %s", *net.Name, *net.NetworkID))
+		state.Put("network", net)
+		// do not delete the user specified subnet, hence skipping the cleanup
+		s.doCleanup = false
+		return multistep.ActionContinue
+	}
 
 	// If CreateDHCPNetwork is set, Create DHCP network.
 	if s.DHCPNetwork {
