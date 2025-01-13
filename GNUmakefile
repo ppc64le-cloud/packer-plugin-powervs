@@ -14,6 +14,9 @@ dev: build
 	@mkdir -p ~/.packer.d/plugins/
 	@mv ${BINARY} ~/.packer.d/plugins/${BINARY}
 
+install: build
+	@packer plugins install -path ./${BINARY} "github.com/ppc64le-cloud/powervs"
+
 test:
 	@go test -race -count $(COUNT) $(TEST) -timeout=3m
 
