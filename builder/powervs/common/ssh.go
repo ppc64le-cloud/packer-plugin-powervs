@@ -25,6 +25,7 @@ func SSHHost() func(multistep.StateBag) (string, error) {
 		instanceClient := state.Get("instanceClient").(*instance.IBMPIInstanceClient)
 		host := ""
 		const tries = 25
+		subnet := state.Get("network").(*models.Network)
 		for j := 0; j <= tries; j++ {
 			i := state.Get("instance").(*models.PVMInstance)
 			in, err := instanceClient.Get(*i.PvmInstanceID)
@@ -32,7 +33,12 @@ func SSHHost() func(multistep.StateBag) (string, error) {
 				return "", errors.New("couldn't determine address for instance: failed to get instance")
 			}
 			for _, net := range in.Networks {
-				if net.ExternalIP != "" {
+				if *subnet.NetworkID != net.NetworkID {
+					continue
+				}
+				if *subnet.Type == "vlan" {
+					host = net.IPAddress
+				} else if *subnet.Type == "pub-vlan" {
 					host = net.ExternalIP
 				}
 			}
@@ -40,6 +46,7 @@ func SSHHost() func(multistep.StateBag) (string, error) {
 				return host, nil
 			}
 
+			// TODO: following code doesn't look good, needs refactoring.
 			dhcpServerID, ok := state.GetOk("dhcpServerID")
 			if !ok {
 				// if the dhcpServerID is not set, dont try to fetch IP from DHCP server, instead wait for address to get populated.
