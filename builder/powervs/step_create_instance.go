@@ -28,11 +28,23 @@ func (s *StepCreateInstance) Run(_ context.Context, state multistep.StateBag) mu
 	net := state.Get("network").(*models.Network)
 
 	imageRef := state.Get("source_image").(*models.ImageReference)
-	networks := []*models.PVMInstanceAddNetwork{
-		{
-			NetworkID: net.NetworkID,
-		},
+
+	networks := []*models.PVMInstanceAddNetwork{}
+
+	if state.Get("networks") != nil {
+		// Several subnets have been specified -> pass them all for vm creation
+		networks = []*models.PVMInstanceAddNetwork{}
+
+		for _, subnet := range state.Get("networks").([]string){
+			subnetAdd := &models.PVMInstanceAddNetwork{
+				NetworkID: &subnet,
+			}
+			networks = append(networks, subnetAdd)
+	    }
+	} else {
+		networks = append(networks, &models.PVMInstanceAddNetwork{NetworkID: net.NetworkID})
 	}
+
 	body := &models.PVMInstanceCreate{
 		ImageID:     imageRef.ImageID,
 		KeyPairName: s.KeyPairName,

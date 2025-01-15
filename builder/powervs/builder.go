@@ -97,7 +97,7 @@ func (b *Builder) Run(ctx context.Context, ui packer.Ui, hook packer.Hook) (pack
 			Source: b.config.Source,
 		},
 		&StepCreateNetwork{
-			SubnetID:    b.config.SubnetID,
+			SubnetIDs:   b.config.SubnetIDs,
 			DHCPNetwork: b.config.DHCPNetwork,
 		},
 		&StepCreateInstance{

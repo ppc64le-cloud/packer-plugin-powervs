@@ -27,7 +27,7 @@ type FlatConfig struct {
 	ServiceInstanceID         *string             `mapstructure:"service_instance_id" required:"true" cty:"service_instance_id" hcl:"service_instance_id"`
 	InstanceName              *string             `mapstructure:"instance_name" required:"true" cty:"instance_name" hcl:"instance_name"`
 	KeyPairName               *string             `mapstructure:"key_pair_name" required:"true" cty:"key_pair_name" hcl:"key_pair_name"`
-	SubnetID                  *string             `mapstructure:"subnet_id" required:"false" cty:"subnet_id" hcl:"subnet_id"`
+	SubnetIDs                 []string            `mapstructure:"subnet_ids" required:"false" cty:"subnet_ids" hcl:"subnet_ids"`
 	DHCPNetwork               *bool               `mapstructure:"dhcp_network" required:"false" cty:"dhcp_network" hcl:"dhcp_network"`
 	Source                    *common.FlatSource  `mapstructure:"source" required:"true" cty:"source" hcl:"source"`
 	Capture                   *common.FlatCapture `mapstructure:"capture" required:"true" cty:"capture" hcl:"capture"`
@@ -110,7 +110,7 @@ func (*FlatConfig) HCL2Spec() map[string]hcldec.Spec {
 		"service_instance_id":          &hcldec.AttrSpec{Name: "service_instance_id", Type: cty.String, Required: false},
 		"instance_name":                &hcldec.AttrSpec{Name: "instance_name", Type: cty.String, Required: false},
 		"key_pair_name":                &hcldec.AttrSpec{Name: "key_pair_name", Type: cty.String, Required: false},
-		"subnet_id":                    &hcldec.AttrSpec{Name: "subnet_id", Type: cty.String, Required: false},
+		"subnet_ids":                   &hcldec.AttrSpec{Name: "subnet_ids", Type: cty.List(cty.String), Required: false},
 		"dhcp_network":                 &hcldec.AttrSpec{Name: "dhcp_network", Type: cty.Bool, Required: false},
 		"source":                       &hcldec.BlockSpec{TypeName: "source", Nested: hcldec.ObjectSpec((*common.FlatSource)(nil).HCL2Spec())},
 		"capture":                      &hcldec.BlockSpec{TypeName: "capture", Nested: hcldec.ObjectSpec((*common.FlatCapture)(nil).HCL2Spec())},
