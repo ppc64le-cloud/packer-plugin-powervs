@@ -20,29 +20,37 @@ const (
 )
 
 type StepCreateNetwork struct {
-	SubnetID    string
-	DHCPNetwork bool
-	doCleanup   bool
+	SubnetIDs           []string
+	DHCPNetwork         bool
+	doCleanup           bool
 }
+
 
 func (s *StepCreateNetwork) Run(_ context.Context, state multistep.StateBag) multistep.StepAction {
 	ui := state.Get("ui").(packersdk.Ui)
 
 	networkClient := state.Get("networkClient").(*instance.IBMPINetworkClient)
 
-	if s.SubnetID != "" {
-		ui.Say("The subnet is specified by the user; reuse it instead of creating a new one.")
-		net, err := networkClient.Get(s.SubnetID)
-		if err != nil {
-			ui.Error(fmt.Sprintf("failed to get subnet: %s, error: %v", s.SubnetID, err))
-			return multistep.ActionHalt
+	if s.SubnetIDs != nil {
+		for i, subnetID := range s.SubnetIDs {
+			ui.Say("The subnet is specified by the user; reuse it instead of creating a new one.")
+			net, err := networkClient.Get(subnetID)
+			if err != nil {
+				ui.Error(fmt.Sprintf("failed to get subnet: %s, error: %v", subnetID, err))
+				return multistep.ActionHalt
+			}
+			ui.Message(fmt.Sprintf("Network found!, Name: %s, ID: %s", *net.Name, *net.NetworkID))
+			if i == 0 {
+				ui.Say(fmt.Sprintf("Registering subnet %s as interface for ssh", subnetID))
+				state.Put("network", net)
+			}
 		}
-		ui.Message(fmt.Sprintf("Network found!, Name: %s, ID: %s", *net.Name, *net.NetworkID))
-		state.Put("network", net)
-		// do not delete the user specified subnet, hence skipping the cleanup
+		// The subnets have been validated, let's pass them further as plain ids
+		state.Put("networks", s.SubnetIDs)
+		// do not delete user specified subnets, hence skipping the cleanup
 		s.doCleanup = false
 		return multistep.ActionContinue
-	}
+        }
 
 	// If CreateDHCPNetwork is set, Create DHCP network.
 	if s.DHCPNetwork {
