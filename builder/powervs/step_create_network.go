@@ -20,11 +20,10 @@ const (
 )
 
 type StepCreateNetwork struct {
-	SubnetIDs           []string
-	DHCPNetwork         bool
-	doCleanup           bool
+	SubnetIDs   []string
+	DHCPNetwork bool
+	doCleanup   bool
 }
-
 
 func (s *StepCreateNetwork) Run(_ context.Context, state multistep.StateBag) multistep.StepAction {
 	ui := state.Get("ui").(packersdk.Ui)
@@ -50,7 +49,7 @@ func (s *StepCreateNetwork) Run(_ context.Context, state multistep.StateBag) mul
 		// do not delete user specified subnets, hence skipping the cleanup
 		s.doCleanup = false
 		return multistep.ActionContinue
-        }
+	}
 
 	// If CreateDHCPNetwork is set, Create DHCP network.
 	if s.DHCPNetwork {

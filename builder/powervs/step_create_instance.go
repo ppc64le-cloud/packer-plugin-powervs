@@ -35,12 +35,12 @@ func (s *StepCreateInstance) Run(_ context.Context, state multistep.StateBag) mu
 		// Several subnets have been specified -> pass them all for vm creation
 		networks = []*models.PVMInstanceAddNetwork{}
 
-		for _, subnet := range state.Get("networks").([]string){
+		for _, subnet := range state.Get("networks").([]string) {
 			subnetAdd := &models.PVMInstanceAddNetwork{
 				NetworkID: &subnet,
 			}
 			networks = append(networks, subnetAdd)
-	    }
+		}
 	} else {
 		networks = append(networks, &models.PVMInstanceAddNetwork{NetworkID: net.NetworkID})
 	}
