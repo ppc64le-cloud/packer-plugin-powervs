@@ -15,7 +15,7 @@ dev: build
 	@mv ${BINARY} ~/.packer.d/plugins/${BINARY}
 
 uninstall:
-	@packer plugins remove github.com/ppc64le-cloud/powervs
+	-@packer plugins remove github.com/ppc64le-cloud/powervs
 
 install: build uninstall
 	@packer plugins install -path ./${BINARY} "github.com/ppc64le-cloud/powervs"
