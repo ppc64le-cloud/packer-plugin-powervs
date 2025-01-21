@@ -37,12 +37,12 @@ type CaptureCOS struct {
 }
 
 type RunConfig struct {
-	InstanceName string    `mapstructure:"instance_name" required:"true"`
-	KeyPairName  string    `mapstructure:"key_pair_name" required:"true"`
-	SubnetIDs    []string  `mapstructure:"subnet_ids" required:"false"`
-	DHCPNetwork  bool      `mapstructure:"dhcp_network" required:"false"`
-	Source       Source    `mapstructure:"source" required:"true"`
-	Capture      Capture   `mapstructure:"capture" required:"true"`
+	InstanceName string   `mapstructure:"instance_name" required:"true"`
+	KeyPairName  string   `mapstructure:"key_pair_name" required:"true"`
+	SubnetIDs    []string `mapstructure:"subnet_ids" required:"false"`
+	DHCPNetwork  bool     `mapstructure:"dhcp_network" required:"false"`
+	Source       Source   `mapstructure:"source" required:"true"`
+	Capture      Capture  `mapstructure:"capture" required:"true"`
 
 	// Communicator settings
 	Comm communicator.Config `mapstructure:",squash"`
