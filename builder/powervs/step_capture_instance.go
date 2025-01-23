@@ -3,12 +3,13 @@ package powervs
 import (
 	"context"
 	"fmt"
+	"time"
+
 	"github.com/IBM-Cloud/power-go-client/clients/instance"
 	"github.com/IBM-Cloud/power-go-client/power/models"
 	"github.com/hashicorp/packer-plugin-sdk/multistep"
 	packersdk "github.com/hashicorp/packer-plugin-sdk/packer"
 	"github.com/ppc64le-cloud/packer-plugin-powervs/builder/powervs/common"
-	"time"
 )
 
 const (
@@ -17,7 +18,7 @@ const (
 )
 
 var (
-	CaptureDestinationCloudStorage = "cloud-storage"
+	CaptureDestinationDefault = "cloud-storage"
 )
 
 type StepCaptureInstance struct {
@@ -38,13 +39,20 @@ func (s *StepCaptureInstance) Run(_ context.Context, state multistep.StateBag) m
 		return multistep.ActionHalt
 	}
 
+	captureDestination := CaptureDestinationDefault
+	if s.Capture.Destination != "" {
+		captureDestination = s.Capture.Destination
+	}
+
 	body := &models.PVMInstanceCapture{
-		CaptureDestination:    &CaptureDestinationCloudStorage,
-		CaptureName:           &s.Capture.Name,
-		CloudStorageAccessKey: s.Capture.COS.AccessKey,
-		CloudStorageImagePath: s.Capture.COS.Bucket,
-		CloudStorageRegion:    s.Capture.COS.Region,
-		CloudStorageSecretKey: s.Capture.COS.SecretKey,
+		CaptureDestination: &captureDestination,
+		CaptureName:        &s.Capture.Name,
+	}
+	if s.Capture.COS != nil {
+		body.CloudStorageAccessKey = s.Capture.COS.AccessKey
+		body.CloudStorageImagePath = s.Capture.COS.Bucket
+		body.CloudStorageRegion = s.Capture.COS.Region
+		body.CloudStorageSecretKey = s.Capture.COS.SecretKey
 	}
 	jobRef, err := instanceClient.CaptureInstanceToImageCatalogV2(*i.PvmInstanceID, body)
 	if err != nil {

@@ -25,8 +25,11 @@ type StockImage struct {
 }
 
 type Capture struct {
-	Name string      `mapstructure:"name" required:"true"`
-	COS  *CaptureCOS `mapstructure:"cos" required:"false"`
+	Name string `mapstructure:"name" required:"true"`
+	// The destination determines how the image is captured. Options: ('image-catalog', 'cloud-storage', 'both'). The default is 'cloud-storage'.
+	// if image-catalog is specified then cos field content will be ignored
+	Destination string      `mapstructure:"destination" required:"false"`
+	COS         *CaptureCOS `mapstructure:"cos" required:"false"`
 }
 
 type CaptureCOS struct {

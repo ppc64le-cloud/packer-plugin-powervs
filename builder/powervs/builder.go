@@ -53,8 +53,10 @@ func (b *Builder) Prepare(raws ...interface{}) (generatedVars []string, warnings
 	}
 
 	packer.LogSecretFilter.Set(b.config.APIKey)
-	packer.LogSecretFilter.Set(b.config.Capture.COS.AccessKey)
-	packer.LogSecretFilter.Set(b.config.Capture.COS.SecretKey)
+	if b.config.Capture.COS != nil {
+		packer.LogSecretFilter.Set(b.config.Capture.COS.AccessKey)
+		packer.LogSecretFilter.Set(b.config.Capture.COS.SecretKey)
+	}
 
 	return []string{}, nil, nil
 }

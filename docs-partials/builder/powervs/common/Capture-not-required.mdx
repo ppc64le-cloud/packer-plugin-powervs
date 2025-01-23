@@ -1,5 +1,8 @@
 <!-- Code generated from the comments of the Capture struct in builder/powervs/common/run_config.go; DO NOT EDIT MANUALLY -->
 
+- `destination` (string) - The destination determines how the image is captured. Options: ('image-catalog', 'cloud-storage', 'both'). The default is 'cloud-storage'.
+  if image-catalog is specified then cos field content will be ignored
+
 - `cos` (\*CaptureCOS) - COS
 
 <!-- End of code generated from the comments of the Capture struct in builder/powervs/common/run_config.go; -->
