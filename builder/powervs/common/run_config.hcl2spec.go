@@ -37,8 +37,9 @@ func (*FlatCOS) HCL2Spec() map[string]hcldec.Spec {
 // FlatCapture is an auto-generated flat version of Capture.
 // Where the contents of a field with a `mapstructure:,squash` tag are bubbled up.
 type FlatCapture struct {
-	Name *string         `mapstructure:"name" required:"true" cty:"name" hcl:"name"`
-	COS  *FlatCaptureCOS `mapstructure:"cos" required:"false" cty:"cos" hcl:"cos"`
+	Name        *string         `mapstructure:"name" required:"true" cty:"name" hcl:"name"`
+	Destination *string         `mapstructure:"destination" required:"false" cty:"destination" hcl:"destination"`
+	COS         *FlatCaptureCOS `mapstructure:"cos" required:"false" cty:"cos" hcl:"cos"`
 }
 
 // FlatMapstructure returns a new FlatCapture.
@@ -53,8 +54,9 @@ func (*Capture) FlatMapstructure() interface{ HCL2Spec() map[string]hcldec.Spec 
 // The decoded values from this spec will then be applied to a FlatCapture.
 func (*FlatCapture) HCL2Spec() map[string]hcldec.Spec {
 	s := map[string]hcldec.Spec{
-		"name": &hcldec.AttrSpec{Name: "name", Type: cty.String, Required: false},
-		"cos":  &hcldec.BlockSpec{TypeName: "cos", Nested: hcldec.ObjectSpec((*FlatCaptureCOS)(nil).HCL2Spec())},
+		"name":        &hcldec.AttrSpec{Name: "name", Type: cty.String, Required: false},
+		"destination": &hcldec.AttrSpec{Name: "destination", Type: cty.String, Required: false},
+		"cos":         &hcldec.BlockSpec{TypeName: "cos", Nested: hcldec.ObjectSpec((*FlatCaptureCOS)(nil).HCL2Spec())},
 	}
 	return s
 }
