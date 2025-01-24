@@ -2,6 +2,7 @@ package powervs
 
 import (
 	"context"
+	b64 "encoding/base64"
 	"fmt"
 	"time"
 
@@ -15,6 +16,7 @@ import (
 type StepCreateInstance struct {
 	InstanceName string
 	KeyPairName  string
+	UserData     string
 
 	doCleanup bool
 }
@@ -54,6 +56,7 @@ func (s *StepCreateInstance) Run(_ context.Context, state multistep.StateBag) mu
 		Processors:  core.Float64Ptr(0.5),
 		ServerName:  &s.InstanceName,
 		StorageType: *imageRef.StorageType,
+		UserData:    b64.StdEncoding.EncodeToString([]byte(s.UserData)),
 	}
 	ui.Message("Creating Instance")
 	ins, err := instanceClient.Create(body)
