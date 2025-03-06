@@ -21,8 +21,8 @@ github.com/IBM-Cloud/power-go-client v1.10.0 h1:yBUHWwvNBmLkWpbZJQJEXoxBa1Dm+eJg
 github.com/IBM-Cloud/power-go-client v1.10.0/go.mod h1:UDyXeIKEp6r7yWUXYu3r0ZnFSlNZ2YeQTHwM2Tmlgv0=
 github.com/IBM/go-sdk-core/v5 v5.18.5 h1:g0JRl3sYXJczB/yuDlrN6x22LJ6jIxhp0Sa4ARNW60c=
 github.com/IBM/go-sdk-core/v5 v5.18.5/go.mod h1:KonTFRR+8ZSgw5cxBSYo6E4WZoY1+7n1kfHM82VcjFU=
-github.com/IBM/platform-services-go-sdk v0.77.0 h1:ifvcAYe+3/sa/ztgpqxLZVXnFyb9UzcSuxDNmmmd+iw=
-github.com/IBM/platform-services-go-sdk v0.77.0/go.mod h1:sX7rPXMNqmAt6wQyjnF+oISRFwz6I6XNX9My/mzLqp4=
+github.com/IBM/platform-services-go-sdk v0.77.1 h1:kOjbZTUBjcuzGJNwnd7jY0ZXXINKeCQx2tDJ52ZoyWg=
+github.com/IBM/platform-services-go-sdk v0.77.1/go.mod h1:sX7rPXMNqmAt6wQyjnF+oISRFwz6I6XNX9My/mzLqp4=
 github.com/agext/levenshtein v1.2.3 h1:YB2fHEn0UJagG8T1rrWknE3ZQzWM06O8AMAatNn7lmo=
 github.com/agext/levenshtein v1.2.3/go.mod h1:JEDfjyjHDjOF/1e4FlBE/PkbqA9OfWu2ki2W0IB5558=
 github.com/alecthomas/template v0.0.0-20160405071501-a0175ee3bccc/go.mod h1:LOuyumcjzFXgccqObfd/Ljyb9UuFJ6TxHnclSeseNhc=
