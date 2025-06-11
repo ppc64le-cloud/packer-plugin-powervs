@@ -105,6 +105,7 @@ func (b *Builder) Run(ctx context.Context, ui packer.Ui, hook packer.Hook) (pack
 		&StepCreateInstance{
 			InstanceName: b.config.InstanceName,
 			KeyPairName:  b.config.KeyPairName,
+			UserData:     b.config.UserData,
 		},
 		&communicator.StepConnect{
 			Config:    &b.config.RunConfig.Comm,

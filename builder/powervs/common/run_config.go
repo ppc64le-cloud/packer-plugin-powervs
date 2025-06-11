@@ -43,6 +43,7 @@ type RunConfig struct {
 	InstanceName string   `mapstructure:"instance_name" required:"true"`
 	KeyPairName  string   `mapstructure:"key_pair_name" required:"true"`
 	SubnetIDs    []string `mapstructure:"subnet_ids" required:"false"`
+	UserData     string   `mapstructure:"user_data" required:"false"`
 	DHCPNetwork  bool     `mapstructure:"dhcp_network" required:"false"`
 	Source       Source   `mapstructure:"source" required:"true"`
 	Capture      Capture  `mapstructure:"capture" required:"true"`
