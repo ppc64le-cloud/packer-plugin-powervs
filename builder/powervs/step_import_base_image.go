@@ -2,6 +2,7 @@ package powervs
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"math/rand"
 	"time"
@@ -72,6 +73,7 @@ func (s *StepImageBaseImage) Run(_ context.Context, state multistep.StateBag) mu
 		imageJob, err := imageClient.CreateCosImage(body)
 		if err != nil {
 			ui.Error(fmt.Sprintf("failed to CreateCosImage: %+v", err))
+			state.Put("error", fmt.Errorf("failed to CreateCosImage: %w", err))
 			return multistep.ActionHalt
 		}
 		s.SetCleanup()
@@ -82,6 +84,7 @@ func (s *StepImageBaseImage) Run(_ context.Context, state multistep.StateBag) mu
 			ui.Message(fmt.Sprintf("Job state: %s, progress: %s, message: %s", *job.Status.State, *job.Status.Progress, job.Status.Message))
 			if err != nil {
 				ui.Error(fmt.Sprintf("failed to Get Import Job: %+v", err))
+				state.Put("error", fmt.Errorf("failed to Get Import Job: %w", err))
 				return multistep.ActionHalt
 			}
 			switch *job.Status.State {
@@ -91,7 +94,8 @@ func (s *StepImageBaseImage) Run(_ context.Context, state multistep.StateBag) mu
 				break loop
 			default:
 				if time.Since(begin) >= JobWaitThreshold {
-					ui.Error(fmt.Sprintf("timed out while waiting for image to be imported"))
+					ui.Error("timed out while waiting for image to be imported")
+					state.Put("error", fmt.Errorf("timed out while waiting for image to be imported: %w", err))
 					return multistep.ActionHalt
 				}
 				ui.Message(fmt.Sprintf("Sleeping for %s Minutes", JobPollInterval))
@@ -103,6 +107,7 @@ func (s *StepImageBaseImage) Run(_ context.Context, state multistep.StateBag) mu
 		stockImages, err := imageClient.GetAllStockImages(true, true)
 		if err != nil {
 			ui.Error(fmt.Sprintf("failed to GetAllStockImages: %+v", err))
+			state.Put("error", fmt.Errorf("failed to GetAllStockImages: %w", err))
 			return multistep.ActionHalt
 		}
 		stockImageID := ""
@@ -113,6 +118,7 @@ func (s *StepImageBaseImage) Run(_ context.Context, state multistep.StateBag) mu
 		}
 		if stockImageID == "" {
 			ui.Error(fmt.Sprintf("failed to find a %s in StockImages: %+v", s.Source.StockImage.Name, stockImages.Images))
+			state.Put("error", fmt.Errorf("failed to find a %s in StockImages: %+v", s.Source.StockImage.Name, stockImages.Images))
 			return multistep.ActionHalt
 		}
 		ui.Message(fmt.Sprintf("Stock image found with id: %s\n", stockImageID))
@@ -123,6 +129,7 @@ func (s *StepImageBaseImage) Run(_ context.Context, state multistep.StateBag) mu
 		image, err := imageClient.Create(body)
 		if err != nil {
 			ui.Error(fmt.Sprintf("failed to import StockImage: %+v", err))
+			state.Put("error", fmt.Errorf("failed to import StockImage: %w", err))
 			return multistep.ActionHalt
 		}
 		s.SetCleanup()
@@ -133,6 +140,7 @@ func (s *StepImageBaseImage) Run(_ context.Context, state multistep.StateBag) mu
 			img, err := imageClient.Get(*image.ImageID)
 			if err != nil {
 				ui.Error(fmt.Sprintf("failed to Get an image: %+v", err))
+				state.Put("error", fmt.Errorf("failed to Get an image: %w", err))
 				return multistep.ActionHalt
 			}
 			ui.Message(fmt.Sprintf("Image state: %s", img.State))
@@ -143,7 +151,8 @@ func (s *StepImageBaseImage) Run(_ context.Context, state multistep.StateBag) mu
 				break loop2
 			default:
 				if time.Since(begin) >= ImageImportThreshold {
-					ui.Error(fmt.Sprintf("timed out while waiting for image to be imported"))
+					ui.Error("timed out while waiting for image to be imported")
+					state.Put("error", errors.New("timed out while waiting for image to be imported"))
 					return multistep.ActionHalt
 				}
 				ui.Message(fmt.Sprintf("Sleeping for %s Minutes", ImageImportPollInterval))
@@ -156,6 +165,7 @@ func (s *StepImageBaseImage) Run(_ context.Context, state multistep.StateBag) mu
 	images, err := imageClient.GetAll()
 	if err != nil {
 		ui.Error(fmt.Sprintf("failed to get all the images: %v", err))
+		state.Put("error", fmt.Errorf("failed to get all the images: %w", err))
 		return multistep.ActionHalt
 	}
 	for _, image := range images.Images {
@@ -166,6 +176,7 @@ func (s *StepImageBaseImage) Run(_ context.Context, state multistep.StateBag) mu
 
 	if imageRef == nil {
 		ui.Error("failed to find an image")
+		state.Put("error", errors.New("failed to find an image"))
 		return multistep.ActionHalt
 	}
 

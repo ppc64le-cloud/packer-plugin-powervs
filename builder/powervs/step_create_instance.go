@@ -3,6 +3,7 @@ package powervs
 import (
 	"context"
 	b64 "encoding/base64"
+	"errors"
 	"fmt"
 	"time"
 
@@ -62,6 +63,7 @@ func (s *StepCreateInstance) Run(_ context.Context, state multistep.StateBag) mu
 	ins, err := instanceClient.Create(body)
 	if err != nil {
 		ui.Error(fmt.Sprintf("failed to create instance: %v", err))
+		state.Put("error", fmt.Errorf("failed to create instance: %w", err))
 		return multistep.ActionHalt
 	}
 
@@ -73,6 +75,7 @@ func (s *StepCreateInstance) Run(_ context.Context, state multistep.StateBag) mu
 
 	if len(insIDs) == 0 {
 		ui.Error("insIDs list is empty")
+		state.Put("error", errors.New("insIDs list is empty"))
 		return multistep.ActionHalt
 	}
 
@@ -88,6 +91,7 @@ func (s *StepCreateInstance) Run(_ context.Context, state multistep.StateBag) mu
 		return true, nil
 	}); err != nil {
 		ui.Error(fmt.Sprintf("failed to get instance: %v", err))
+		state.Put("error", fmt.Errorf("failed to create instance: %w", err))
 		return multistep.ActionHalt
 	}
 

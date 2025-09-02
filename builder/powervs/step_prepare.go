@@ -2,13 +2,15 @@ package powervs
 
 import (
 	"context"
+	"errors"
 	"fmt"
+	"time"
+
 	"github.com/IBM-Cloud/power-go-client/clients/instance"
 	"github.com/IBM-Cloud/power-go-client/power/models"
 	"github.com/IBM/go-sdk-core/v5/core"
 	"github.com/hashicorp/packer-plugin-sdk/multistep"
 	packersdk "github.com/hashicorp/packer-plugin-sdk/packer"
-	"time"
 )
 
 const (
@@ -31,6 +33,7 @@ func (s *StepPrepare) Run(_ context.Context, state multistep.StateBag) multistep
 	if err != nil {
 		ui.Error(fmt.Sprintf(
 			"Error stopping the instance, %v", err))
+		state.Put("error", fmt.Errorf("error stopping the instance: %w", err))
 		return multistep.ActionHalt
 	}
 	begin := time.Now()
@@ -38,12 +41,14 @@ func (s *StepPrepare) Run(_ context.Context, state multistep.StateBag) multistep
 		in, err := instanceClient.Get(*i.PvmInstanceID)
 		if err != nil {
 			ui.Error(fmt.Sprintf("failed to get instane, err: %+v", err))
+			state.Put("error", fmt.Errorf("failed to get instane: %w", err))
 			return multistep.ActionHalt
 		}
 		if *in.Status == "SHUTOFF" {
 			return multistep.ActionContinue
 		} else if time.Since(begin) >= PrepareWaitThreshold {
 			ui.Error("timed out waiting for vm to shutoff")
+			state.Put("error", errors.New("timed out waiting for vm to shutoff"))
 			return multistep.ActionHalt
 		}
 		time.Sleep(PreparePollInterval)
