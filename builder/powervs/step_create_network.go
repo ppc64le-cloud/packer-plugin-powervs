@@ -36,6 +36,7 @@ func (s *StepCreateNetwork) Run(_ context.Context, state multistep.StateBag) mul
 			net, err := networkClient.Get(subnetID)
 			if err != nil {
 				ui.Error(fmt.Sprintf("failed to get subnet: %s, error: %v", subnetID, err))
+				state.Put("error", fmt.Errorf("failed to get subnet: %w", err))
 				return multistep.ActionHalt
 			}
 			ui.Message(fmt.Sprintf("Network found!, Name: %s, ID: %s", *net.Name, *net.NetworkID))
@@ -56,6 +57,7 @@ func (s *StepCreateNetwork) Run(_ context.Context, state multistep.StateBag) mul
 		ui.Say("Creating DHCP network")
 		if err := s.createDHCPNetwork(state); err != nil {
 			ui.Error(fmt.Sprintf("failed to create DHCP network: %v", err))
+			state.Put("error", fmt.Errorf("failed to create DHCP network: %w", err))
 			return multistep.ActionHalt
 		}
 		s.doCleanup = true
@@ -70,6 +72,7 @@ func (s *StepCreateNetwork) Run(_ context.Context, state multistep.StateBag) mul
 	net, err := networkClient.Create(netBody)
 	if err != nil {
 		ui.Error(fmt.Sprintf("failed to create network: %v", err))
+		state.Put("error", fmt.Errorf("failed to create network: %w", err))
 		return multistep.ActionHalt
 	}
 	ui.Message(fmt.Sprintf("Network Created, Name: %s, ID: %s", *net.Name, *net.NetworkID))

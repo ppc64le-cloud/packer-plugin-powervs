@@ -2,6 +2,7 @@ package powervs
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"time"
 
@@ -36,6 +37,7 @@ func (s *StepCaptureInstance) Run(_ context.Context, state multistep.StateBag) m
 	if err != nil {
 		ui.Error(fmt.Sprintf(
 			"failed to get instance: %s, err: %v", *in.ServerName, err))
+		state.Put("error", fmt.Errorf("failed to get instance: %w", err))
 		return multistep.ActionHalt
 	}
 
@@ -58,6 +60,7 @@ func (s *StepCaptureInstance) Run(_ context.Context, state multistep.StateBag) m
 	if err != nil {
 		ui.Error(fmt.Sprintf(
 			"failed to capture instance: %s, err: %v", *in.ServerName, err))
+		state.Put("error", fmt.Errorf("failed to capture instance: %w", err))
 		return multistep.ActionHalt
 	}
 
@@ -69,6 +72,7 @@ loop:
 		ui.Message(fmt.Sprintf("Job state: %s, progress: %s, message: %s", *job.Status.State, *job.Status.Progress, job.Status.Message))
 		if err != nil {
 			ui.Error(fmt.Sprintf("failed to Get capture Job: %+v", err))
+			state.Put("error", fmt.Errorf("failed to Get capture Job: %w", err))
 			return multistep.ActionHalt
 		}
 		switch *job.Status.State {
@@ -78,7 +82,8 @@ loop:
 			break loop
 		default:
 			if time.Since(begin) >= CaptureJobWaitThreshold {
-				ui.Error(fmt.Sprintf("timed out while waiting for image to be captured"))
+				ui.Error("timed out while waiting for image to be captured")
+				state.Put("error", errors.New("timed out while waiting for image to be captured"))
 				return multistep.ActionHalt
 			}
 			ui.Message(fmt.Sprintf("Sleeping for %s", CaptureJobPollInterval))
