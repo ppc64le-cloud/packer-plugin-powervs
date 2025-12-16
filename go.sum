@@ -13,8 +13,8 @@ github.com/BurntSushi/toml v0.3.1/go.mod h1:xHWCNGjB5oqiDr8zfno3MHue2Ht5sIBksp03
 github.com/ChrisTrenkamp/goxpath v0.0.0-20210404020558-97928f7e12b6 h1:w0E0fgc1YafGEh5cROhlROMWXiNoZqApk2PDN0M1+Ns=
 github.com/ChrisTrenkamp/goxpath v0.0.0-20210404020558-97928f7e12b6/go.mod h1:nuWgzSkT5PnyOd+272uUmV0dnAnAn42Mk7PiQC5VzN4=
 github.com/DataDog/datadog-go v3.2.0+incompatible/go.mod h1:LButxg5PwREeZtORoXG3tL4fMGNddJ+vMq1mwgfaqoQ=
-github.com/IBM-Cloud/power-go-client v1.14.3 h1:qRA+DnqKSRfcgCeJRDUQXlqipYd6nWtNblubDeRYmhY=
-github.com/IBM-Cloud/power-go-client v1.14.3/go.mod h1:SpTK1ttW8bfMNUVQS8qOEuWn2KOkzaCLyzfze8MG1JE=
+github.com/IBM-Cloud/power-go-client v1.14.4 h1:XXQp4atVwvCfDps1nF5zyi2FzNbsuHtszz5nBJ9yCYg=
+github.com/IBM-Cloud/power-go-client v1.14.4/go.mod h1:TT0jJbptQuDRwB9PPYDcGe0ZwFSl5GiSrNuQeJzJYco=
 github.com/IBM/go-sdk-core/v5 v5.21.2 h1:mJ5QbLPOm4g5qhZiVB6wbSllfpeUExftGoyPek2hk4M=
 github.com/IBM/go-sdk-core/v5 v5.21.2/go.mod h1:ngpMgwkjur1VNUjqn11LPk3o5eCyOCRbcfg/0YAY7Hc=
 github.com/IBM/platform-services-go-sdk v0.91.0 h1:5o4XotMmP9UfCg9BKG0cx/pTAMhBh0KzjyFQQyHZTgE=
