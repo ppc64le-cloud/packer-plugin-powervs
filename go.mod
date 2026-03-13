@@ -7,7 +7,7 @@ require (
 	github.com/IBM/go-sdk-core/v5 v5.21.2
 	github.com/IBM/platform-services-go-sdk v0.96.0
 	github.com/hashicorp/hcl/v2 v2.24.0
-	github.com/hashicorp/packer-plugin-sdk v0.6.5
+	github.com/hashicorp/packer-plugin-sdk v0.6.6
 	github.com/zclconf/go-cty v1.16.3
 )
 
