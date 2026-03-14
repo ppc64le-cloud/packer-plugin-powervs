@@ -67,7 +67,7 @@ func (s *StepCreateInstance) Run(_ context.Context, state multistep.StateBag) mu
 		StorageType: *imageRef.StorageType,
 		UserData:    b64.StdEncoding.EncodeToString([]byte(s.UserData)),
 	}
-	ui.Message("Creating Instance")
+	ui.Say("Creating Instance")
 	ins, err := instanceClient.Create(body)
 	if err != nil {
 		ui.Error(fmt.Sprintf("failed to create instance: %v", err))
@@ -93,7 +93,7 @@ func (s *StepCreateInstance) Run(_ context.Context, state multistep.StateBag) mu
 	if err := pollUntil(time.Tick(30*time.Second), time.After(5*time.Minute), func() (bool, error) {
 		in, err = instanceClient.Get(insIDs[0])
 		if err != nil || in == nil {
-			ui.Message("No response or error encountered while retrieving the instance. Retrying...")
+			ui.Say("No response or error encountered while retrieving the instance. Retrying...")
 			return false, nil
 		}
 		return true, nil
@@ -103,7 +103,7 @@ func (s *StepCreateInstance) Run(_ context.Context, state multistep.StateBag) mu
 		return multistep.ActionHalt
 	}
 
-	ui.Message(fmt.Sprintf("Instance Created, Name: %s, ID: %s", *in.ServerName, *in.PvmInstanceID))
+	ui.Say(fmt.Sprintf("Instance Created, Name: %s, ID: %s", *in.ServerName, *in.PvmInstanceID))
 
 	state.Put("instance", in)
 	s.doCleanup = true
@@ -149,22 +149,22 @@ func (s *StepCreateInstance) Cleanup(state multistep.StateBag) {
 
 		// Instance not found means it was successfully deleted
 		if err != nil {
-			ui.Message("Instance deleted successfully")
+			ui.Say("Instance deleted successfully")
 			return true, nil
 		}
 
 		// Instance still exists, check its state
 		currentState := *in.Status
 		elapsed := time.Since(begin).Round(time.Second)
-		ui.Message(fmt.Sprintf("VM still exists, state: %s (elapsed: %s)", currentState, elapsed))
+		ui.Say(fmt.Sprintf("VM still exists, state: %s (elapsed: %s)", currentState, elapsed))
 
 		// If instance is in ERROR state, warn but continue for a few retries
 		// Sometimes instances in ERROR state can still be deleted
 		if currentState == "ERROR" {
 			errorStateCount++
 			if errorStateCount == 1 {
-				ui.Message("Warning: Instance entered ERROR state during deletion")
-				ui.Message("Continuing to wait for deletion (may require manual cleanup)")
+				ui.Say("Warning: Instance entered ERROR state during deletion")
+				ui.Say("Continuing to wait for deletion (may require manual cleanup)")
 			}
 			if errorStateCount >= maxErrorStateRetries {
 				ui.Error(fmt.Sprintf(
