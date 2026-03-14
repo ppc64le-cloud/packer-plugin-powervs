@@ -14,10 +14,18 @@ import (
 	packersdk "github.com/hashicorp/packer-plugin-sdk/packer"
 )
 
+const (
+	// DefaultCleanupTimeout is the default maximum time to wait for instance deletion
+	DefaultCleanupTimeout = 10 * time.Minute
+	// CleanupPollInterval is how often to check instance deletion status
+	CleanupPollInterval = 10 * time.Second
+)
+
 type StepCreateInstance struct {
-	InstanceName string
-	KeyPairName  string
-	UserData     string
+	InstanceName   string
+	KeyPairName    string
+	UserData       string
+	CleanupTimeout time.Duration
 
 	doCleanup bool
 }
@@ -114,20 +122,75 @@ func (s *StepCreateInstance) Cleanup(state multistep.StateBag) {
 	ui.Say("Deleting the Instance")
 	instanceClient := state.Get("instanceClient").(*instance.IBMPIInstanceClient)
 	i := state.Get("instance").(*models.PVMInstance)
+
+	// Initiate deletion
 	err := instanceClient.Delete(*i.PvmInstanceID)
 	if err != nil {
 		ui.Error(fmt.Sprintf(
-			"Error cleaning up instance. Please delete the instance manually: %s", *i.ServerName))
+			"Error initiating instance deletion. Please delete the instance manually: %s (ID: %s)",
+			*i.ServerName, *i.PvmInstanceID))
+		ui.Error(fmt.Sprintf("Deletion error: %v", err))
+		return
 	}
-	for {
+
+	// Wait for deletion with timeout
+	timeout := s.CleanupTimeout
+	if timeout == 0 {
+		timeout = DefaultCleanupTimeout
+	}
+
+	begin := time.Now()
+	errorStateCount := 0
+	maxErrorStateRetries := 5 // Give some retries even in ERROR state
+
+	//nolint:staticcheck // SA1015 this disable staticcheck for the next line
+	err = pollUntil(time.Tick(CleanupPollInterval), time.After(timeout), func() (bool, error) {
 		in, err := instanceClient.Get(*i.PvmInstanceID)
-		if err == nil {
-			ui.Message(fmt.Sprintf("VM still exists, state: %s", *in.Status))
-			time.Sleep(10 * time.Second)
-			continue
-		} else {
-			ui.Message("instance deleted successfully")
-			break
+
+		// Instance not found means it was successfully deleted
+		if err != nil {
+			ui.Message("Instance deleted successfully")
+			return true, nil
+		}
+
+		// Instance still exists, check its state
+		currentState := *in.Status
+		elapsed := time.Since(begin).Round(time.Second)
+		ui.Message(fmt.Sprintf("VM still exists, state: %s (elapsed: %s)", currentState, elapsed))
+
+		// If instance is in ERROR state, warn but continue for a few retries
+		// Sometimes instances in ERROR state can still be deleted
+		if currentState == "ERROR" {
+			errorStateCount++
+			if errorStateCount == 1 {
+				ui.Message("Warning: Instance entered ERROR state during deletion")
+				ui.Message("Continuing to wait for deletion (may require manual cleanup)")
+			}
+			if errorStateCount >= maxErrorStateRetries {
+				ui.Error(fmt.Sprintf(
+					"Instance has been in ERROR state for %d checks. Deletion may have failed.",
+					errorStateCount))
+				ui.Error(fmt.Sprintf(
+					"Please verify instance status manually: %s (ID: %s)",
+					*i.ServerName, *i.PvmInstanceID))
+				// Don't return error, let timeout handle it
+			}
+		}
+
+		return false, nil
+	})
+
+	if err != nil {
+		// Timeout occurred
+		ui.Error(fmt.Sprintf(
+			"Timed out waiting for instance deletion after %s", timeout))
+		ui.Error(fmt.Sprintf(
+			"Instance may need manual cleanup: %s (ID: %s)",
+			*i.ServerName, *i.PvmInstanceID))
+
+		// Try to get final state
+		if finalInstance, getErr := instanceClient.Get(*i.PvmInstanceID); getErr == nil {
+			ui.Error(fmt.Sprintf("Final instance state: %s", *finalInstance.Status))
 		}
 	}
 }
