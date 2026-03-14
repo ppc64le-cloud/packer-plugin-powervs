@@ -4,6 +4,9 @@
 package common
 
 import (
+	"fmt"
+	"time"
+
 	"github.com/hashicorp/packer-plugin-sdk/communicator"
 	"github.com/hashicorp/packer-plugin-sdk/template/interpolate"
 )
@@ -48,6 +51,12 @@ type RunConfig struct {
 	Source       Source   `mapstructure:"source" required:"true"`
 	Capture      Capture  `mapstructure:"capture" required:"true"`
 
+	// CleanupTimeout specifies the maximum time to wait for instance deletion during cleanup.
+	// If the instance is not deleted within this time, cleanup will fail gracefully with a warning.
+	// Format: duration string (e.g., "10m", "15m30s")
+	// Default: 10 minutes
+	CleanupTimeout string `mapstructure:"cleanup_timeout" required:"false"`
+
 	// Communicator settings
 	Comm communicator.Config `mapstructure:",squash"`
 }
@@ -55,5 +64,16 @@ type RunConfig struct {
 func (c *RunConfig) Prepare(ctx *interpolate.Context) []error {
 	// Validation
 	errs := c.Comm.Prepare(ctx)
+
+	// Set default cleanup timeout if not specified
+	if c.CleanupTimeout == "" {
+		c.CleanupTimeout = "10m"
+	}
+
+	// Validate cleanup timeout format
+	if _, err := time.ParseDuration(c.CleanupTimeout); err != nil {
+		errs = append(errs, fmt.Errorf("invalid cleanup_timeout format: %s (use format like '10m', '15m30s')", c.CleanupTimeout))
+	}
+
 	return errs
 }

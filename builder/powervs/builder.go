@@ -5,6 +5,7 @@ package powervs
 
 import (
 	"context"
+	"time"
 
 	"github.com/hashicorp/hcl/v2/hcldec"
 	"github.com/hashicorp/packer-plugin-sdk/common"
@@ -94,6 +95,12 @@ func (b *Builder) Run(ctx context.Context, ui packer.Ui, hook packer.Hook) (pack
 
 	var steps []multistep.Step
 
+	// Parse cleanup timeout
+	cleanupTimeout, _ := time.ParseDuration(b.config.CleanupTimeout)
+	if cleanupTimeout == 0 {
+		cleanupTimeout = 10 * time.Minute // Default
+	}
+
 	steps = append(steps,
 		&StepImageBaseImage{
 			Source: b.config.Source,
@@ -103,9 +110,10 @@ func (b *Builder) Run(ctx context.Context, ui packer.Ui, hook packer.Hook) (pack
 			DHCPNetwork: b.config.DHCPNetwork,
 		},
 		&StepCreateInstance{
-			InstanceName: b.config.InstanceName,
-			KeyPairName:  b.config.KeyPairName,
-			UserData:     b.config.UserData,
+			InstanceName:   b.config.InstanceName,
+			KeyPairName:    b.config.KeyPairName,
+			UserData:       b.config.UserData,
+			CleanupTimeout: cleanupTimeout,
 		},
 		&communicator.StepConnect{
 			Config:    &b.config.RunConfig.Comm,
