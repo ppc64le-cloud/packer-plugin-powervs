@@ -69,7 +69,7 @@ func (s *StepCaptureInstance) Run(_ context.Context, state multistep.StateBag) m
 loop:
 	for {
 		job, err := jobClient.Get(*jobRef.ID)
-		ui.Message(fmt.Sprintf("Job state: %s, progress: %s, message: %s", *job.Status.State, *job.Status.Progress, job.Status.Message))
+		ui.Say(fmt.Sprintf("Job state: %s, progress: %s, message: %s", *job.Status.State, *job.Status.Progress, job.Status.Message))
 		if err != nil {
 			ui.Error(fmt.Sprintf("failed to Get capture Job: %+v", err))
 			state.Put("error", fmt.Errorf("failed to Get capture Job: %w", err))
@@ -86,7 +86,7 @@ loop:
 				state.Put("error", errors.New("timed out while waiting for image to be captured"))
 				return multistep.ActionHalt
 			}
-			ui.Message(fmt.Sprintf("Sleeping for %s", CaptureJobPollInterval))
+			ui.Say(fmt.Sprintf("Sleeping for %s", CaptureJobPollInterval))
 			time.Sleep(CaptureJobPollInterval)
 		}
 	}

@@ -21,7 +21,7 @@ var (
 func SSHHost() func(multistep.StateBag) (string, error) {
 	return func(state multistep.StateBag) (string, error) {
 		ui := state.Get("ui").(packersdk.Ui)
-		ui.Message("Fetching IP for machine")
+		ui.Say("Fetching IP for machine")
 		instanceClient := state.Get("instanceClient").(*instance.IBMPIInstanceClient)
 		host := ""
 		const tries = 25
@@ -50,12 +50,12 @@ func SSHHost() func(multistep.StateBag) (string, error) {
 			dhcpServerID, ok := state.GetOk("dhcpServerID")
 			if !ok {
 				// if the dhcpServerID is not set, dont try to fetch IP from DHCP server, instead wait for address to get populated.
-				ui.Message("Machine IP is not yet found, Trying again")
+				ui.Say("Machine IP is not yet found, Trying again")
 				time.Sleep(sshHostSleepDuration)
 				continue
 			}
 			dhcpClient := state.Get("dhcpClient").(*instance.IBMPIDhcpClient)
-			ui.Message("Getting Instance IP from DHCP server")
+			ui.Say("Getting Instance IP from DHCP server")
 
 			net := state.Get("network").(*models.Network)
 			networkID := net.NetworkID
@@ -64,12 +64,12 @@ func SSHHost() func(multistep.StateBag) (string, error) {
 			for _, network := range in.Networks {
 				if network.NetworkID == *networkID {
 					pvmNetwork = network
-					ui.Message("Found network attached to VM")
+					ui.Say("Found network attached to VM")
 				}
 			}
 
 			if pvmNetwork == nil {
-				ui.Message("Failed to get network attached to VM, Trying again")
+				ui.Say("Failed to get network attached to VM, Trying again")
 				time.Sleep(sshHostSleepDuration)
 				continue
 			}
@@ -88,7 +88,7 @@ func SSHHost() func(multistep.StateBag) (string, error) {
 			var internalIP string
 			for _, lease := range dhcpServerDetails.Leases {
 				if *lease.InstanceMacAddress == pvmNetwork.MacAddress {
-					ui.Message(fmt.Sprintf("Found internal ip for VM from DHCP lease IP %s", *lease.InstanceIP))
+					ui.Say(fmt.Sprintf("Found internal ip for VM from DHCP lease IP %s", *lease.InstanceIP))
 					internalIP = *lease.InstanceIP
 					break
 				}
@@ -97,7 +97,7 @@ func SSHHost() func(multistep.StateBag) (string, error) {
 				return internalIP, nil
 			}
 
-			ui.Message("Machine IP is not yet found from DHCP server lease, Trying again")
+			ui.Say("Machine IP is not yet found from DHCP server lease, Trying again")
 			time.Sleep(sshHostSleepDuration)
 		}
 		return "", errors.New("couldn't determine address for instance")

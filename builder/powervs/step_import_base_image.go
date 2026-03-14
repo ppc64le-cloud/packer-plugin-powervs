@@ -57,7 +57,7 @@ func (s *StepImageBaseImage) Run(_ context.Context, state multistep.StateBag) mu
 	jobClient := state.Get("jobClient").(*instance.IBMPIJobClient)
 	switch {
 	case s.Source.COS != nil:
-		ui.Message(fmt.Sprintf("Importing from the COS bucket: %+v\n", s.Source.COS))
+		ui.Say(fmt.Sprintf("Importing from the COS bucket: %+v\n", s.Source.COS))
 		if s.Source.Name == "" {
 			s1 := rand.NewSource(time.Now().UnixNano())
 			s.Source.Name = fmt.Sprintf("%s-image-%d", s.Source.COS.Bucket, rand.New(s1).Intn(100))
@@ -81,7 +81,7 @@ func (s *StepImageBaseImage) Run(_ context.Context, state multistep.StateBag) mu
 	loop:
 		for {
 			job, err := jobClient.Get(*imageJob.ID)
-			ui.Message(fmt.Sprintf("Job state: %s, progress: %s, message: %s", *job.Status.State, *job.Status.Progress, job.Status.Message))
+			ui.Say(fmt.Sprintf("Job state: %s, progress: %s, message: %s", *job.Status.State, *job.Status.Progress, job.Status.Message))
 			if err != nil {
 				ui.Error(fmt.Sprintf("failed to Get Import Job: %+v", err))
 				state.Put("error", fmt.Errorf("failed to Get Import Job: %w", err))
@@ -98,12 +98,12 @@ func (s *StepImageBaseImage) Run(_ context.Context, state multistep.StateBag) mu
 					state.Put("error", fmt.Errorf("timed out while waiting for image to be imported: %w", err))
 					return multistep.ActionHalt
 				}
-				ui.Message(fmt.Sprintf("Sleeping for %s Minutes", JobPollInterval))
+				ui.Say(fmt.Sprintf("Sleeping for %s Minutes", JobPollInterval))
 				time.Sleep(JobPollInterval)
 			}
 		}
 	case s.Source.StockImage != nil:
-		ui.Message(fmt.Sprintf("Importing from the Stock Image: %+v\n", s.Source.StockImage))
+		ui.Say(fmt.Sprintf("Importing from the Stock Image: %+v\n", s.Source.StockImage))
 		stockImages, err := imageClient.GetAllStockImages(true, true)
 		if err != nil {
 			ui.Error(fmt.Sprintf("failed to GetAllStockImages: %+v", err))
@@ -121,7 +121,7 @@ func (s *StepImageBaseImage) Run(_ context.Context, state multistep.StateBag) mu
 			state.Put("error", fmt.Errorf("failed to find a %s in StockImages: %+v", s.Source.StockImage.Name, stockImages.Images))
 			return multistep.ActionHalt
 		}
-		ui.Message(fmt.Sprintf("Stock image found with id: %s\n", stockImageID))
+		ui.Say(fmt.Sprintf("Stock image found with id: %s\n", stockImageID))
 		body := &models.CreateImage{
 			ImageID: stockImageID,
 			Source:  core.StringPtr("root-project"),
@@ -143,7 +143,7 @@ func (s *StepImageBaseImage) Run(_ context.Context, state multistep.StateBag) mu
 				state.Put("error", fmt.Errorf("failed to Get an image: %w", err))
 				return multistep.ActionHalt
 			}
-			ui.Message(fmt.Sprintf("Image state: %s", img.State))
+			ui.Say(fmt.Sprintf("Image state: %s", img.State))
 			switch img.State {
 			case ImageStateFailed:
 				return multistep.ActionHalt
@@ -155,7 +155,7 @@ func (s *StepImageBaseImage) Run(_ context.Context, state multistep.StateBag) mu
 					state.Put("error", errors.New("timed out while waiting for image to be imported"))
 					return multistep.ActionHalt
 				}
-				ui.Message(fmt.Sprintf("Sleeping for %s Minutes", ImageImportPollInterval))
+				ui.Say(fmt.Sprintf("Sleeping for %s Minutes", ImageImportPollInterval))
 				time.Sleep(ImageImportPollInterval)
 			}
 		}
@@ -180,7 +180,7 @@ func (s *StepImageBaseImage) Run(_ context.Context, state multistep.StateBag) mu
 		return multistep.ActionHalt
 	}
 
-	ui.Message(fmt.Sprintf("Image found with ID: %s", *imageRef.ImageID))
+	ui.Say(fmt.Sprintf("Image found with ID: %s", *imageRef.ImageID))
 	state.Put("source_image", imageRef)
 	return multistep.ActionContinue
 }
@@ -204,11 +204,11 @@ func (s *StepImageBaseImage) Cleanup(state multistep.StateBag) {
 	for {
 		img, err := imageClient.Get(*si.ImageID)
 		if err == nil {
-			ui.Message(fmt.Sprintf("Image still exists, state: %s", img.State))
+			ui.Say(fmt.Sprintf("Image still exists, state: %s", img.State))
 			time.Sleep(10 * time.Second)
 			continue
 		} else {
-			ui.Message("image deleted successfully")
+			ui.Say("image deleted successfully")
 			break
 		}
 	}

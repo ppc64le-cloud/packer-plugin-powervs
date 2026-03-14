@@ -39,7 +39,7 @@ func (s *StepCreateNetwork) Run(_ context.Context, state multistep.StateBag) mul
 				state.Put("error", fmt.Errorf("failed to get subnet: %w", err))
 				return multistep.ActionHalt
 			}
-			ui.Message(fmt.Sprintf("Network found!, Name: %s, ID: %s", *net.Name, *net.NetworkID))
+			ui.Say(fmt.Sprintf("Network found!, Name: %s, ID: %s", *net.Name, *net.NetworkID))
 			if i == 0 {
 				ui.Say(fmt.Sprintf("Registering subnet %s as interface for ssh", subnetID))
 				state.Put("network", net)
@@ -75,7 +75,7 @@ func (s *StepCreateNetwork) Run(_ context.Context, state multistep.StateBag) mul
 		state.Put("error", fmt.Errorf("failed to create network: %w", err))
 		return multistep.ActionHalt
 	}
-	ui.Message(fmt.Sprintf("Network Created, Name: %s, ID: %s", *net.Name, *net.NetworkID))
+	ui.Say(fmt.Sprintf("Network Created, Name: %s, ID: %s", *net.Name, *net.NetworkID))
 	state.Put("network", net)
 	s.doCleanup = true
 
@@ -93,14 +93,14 @@ func (s *StepCreateNetwork) Cleanup(state multistep.StateBag) {
 	ui.Say("Deleting the Network")
 
 	if s.DHCPNetwork {
-		ui.Message("Deleting DHCP server")
+		ui.Say("Deleting DHCP server")
 		dhcpServerID := state.Get("dhcpServerID").(string)
 		dhcpClient := state.Get("dhcpClient").(*instance.IBMPIDhcpClient)
 
 		if err := dhcpClient.Delete(dhcpServerID); err != nil {
 			ui.Error(fmt.Sprintf("Error cleaning up DHCP server. Please delete the DHCP server manually: %s error: %v", dhcpServerID, err.Error()))
 		}
-		ui.Message("Successfully deleted DHCP server")
+		ui.Say("Successfully deleted DHCP server")
 		return
 	}
 	networkClient := state.Get("networkClient").(*instance.IBMPINetworkClient)
@@ -110,7 +110,7 @@ func (s *StepCreateNetwork) Cleanup(state multistep.StateBag) {
 		ui.Error(fmt.Sprintf(
 			"Error cleaning up network. Please delete the network manually: %s", *net.Name))
 	}
-	ui.Message("Successfully deleted network")
+	ui.Say("Successfully deleted network")
 }
 
 func (s *StepCreateNetwork) createDHCPNetwork(state multistep.StateBag) error {
@@ -136,13 +136,13 @@ func (s *StepCreateNetwork) createDHCPNetwork(state multistep.StateBag) error {
 		}
 		if dhcpServerDetails.Network != nil && dhcpServerDetails.Network.ID != nil {
 			networkID = *dhcpServerDetails.Network.ID
-			ui.Message("DHCP server in active state")
+			ui.Say("DHCP server in active state")
 			break
 		}
 		if time.Since(startTime) > DHCPServerActiveTimeOut {
 			return fmt.Errorf("error DHCP server did not become active even after %f min", DHCPServerActiveTimeOut.Minutes())
 		}
-		ui.Message("Wating for DHCP server to become active")
+		ui.Say("Wating for DHCP server to become active")
 		time.Sleep(DHCPServerInterval)
 	}
 	ui.Say("Fetching network details")
