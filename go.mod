@@ -4,7 +4,7 @@ go 1.25.10
 
 require (
 	github.com/IBM-Cloud/power-go-client v1.15.0
-	github.com/IBM/go-sdk-core/v5 v5.21.2
+	github.com/IBM/go-sdk-core/v5 v5.21.3
 	github.com/IBM/platform-services-go-sdk v0.98.0
 	github.com/hashicorp/hcl/v2 v2.24.0
 	github.com/hashicorp/packer-plugin-sdk v0.6.9
@@ -145,7 +145,7 @@ require (
 	golang.org/x/net v0.48.0 // indirect
 	golang.org/x/oauth2 v0.34.0 // indirect
 	golang.org/x/sync v0.19.0 // indirect
-	golang.org/x/sys v0.39.0 // indirect
+	golang.org/x/sys v0.44.0 // indirect
 	golang.org/x/term v0.38.0 // indirect
 	golang.org/x/text v0.32.0 // indirect
 	golang.org/x/time v0.11.0 // indirect
