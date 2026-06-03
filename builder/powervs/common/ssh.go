@@ -3,6 +3,8 @@ package common
 import (
 	"errors"
 	"fmt"
+	"net"
+	"strings"
 	"time"
 
 	"github.com/IBM-Cloud/power-go-client/clients/instance"
@@ -42,7 +44,11 @@ func SSHHost() func(multistep.StateBag) (string, error) {
 					host = net.ExternalIP
 				}
 			}
-			if host != "" {
+			// Validate that the discovered host value is a valid IP address
+			// before attempting SSH. Invalid values fall back to DHCP lease
+			// discovery.
+			host = strings.TrimSpace(host)
+			if net.ParseIP(host) != nil {
 				return host, nil
 			}
 
