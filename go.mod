@@ -1,13 +1,13 @@
 module github.com/ppc64le-cloud/packer-plugin-powervs
 
-go 1.25.10
+go 1.25.11
 
 require (
 	github.com/IBM-Cloud/power-go-client v1.16.2
 	github.com/IBM/go-sdk-core/v5 v5.22.1
 	github.com/IBM/platform-services-go-sdk v0.101.0
 	github.com/hashicorp/hcl/v2 v2.24.0
-	github.com/hashicorp/packer-plugin-sdk v0.6.9
+	github.com/hashicorp/packer-plugin-sdk v0.6.10
 	github.com/zclconf/go-cty v1.16.3
 )
 
@@ -127,7 +127,7 @@ require (
 	github.com/ryanuber/go-glob v1.0.0 // indirect
 	github.com/tidwall/transform v0.0.0-20201103190739-32f242e2dbde // indirect
 	github.com/ugorji/go/codec v1.2.6 // indirect
-	github.com/ulikunitz/xz v0.5.14 // indirect
+	github.com/ulikunitz/xz v0.5.15 // indirect
 	github.com/vmihailenco/msgpack/v5 v5.3.5 // indirect
 	github.com/vmihailenco/tagparser/v2 v2.0.0 // indirect
 	go.opencensus.io v0.24.0 // indirect
