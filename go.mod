@@ -6,9 +6,9 @@ require (
 	github.com/IBM-Cloud/power-go-client v1.16.2
 	github.com/IBM/go-sdk-core/v5 v5.23.3
 	github.com/IBM/platform-services-go-sdk v0.103.0
-	github.com/hashicorp/hcl/v2 v2.24.0
+	github.com/hashicorp/hcl/v2 v2.25.0
 	github.com/hashicorp/packer-plugin-sdk v0.6.10
-	github.com/zclconf/go-cty v1.16.3
+	github.com/zclconf/go-cty v1.19.0
 )
 
 require (
@@ -24,6 +24,7 @@ require (
 	github.com/agext/levenshtein v1.2.3 // indirect
 	github.com/apparentlymart/go-textseg/v13 v13.0.0 // indirect
 	github.com/apparentlymart/go-textseg/v15 v15.0.0 // indirect
+	github.com/apparentlymart/go-textseg/v17 v17.0.1 // indirect
 	github.com/armon/go-metrics v0.4.1 // indirect
 	github.com/aws/aws-sdk-go v1.44.114 // indirect
 	github.com/aws/aws-sdk-go-v2 v1.37.2 // indirect
