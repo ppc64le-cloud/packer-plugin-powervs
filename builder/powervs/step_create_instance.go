@@ -25,6 +25,7 @@ type StepCreateInstance struct {
 	InstanceName   string
 	KeyPairName    string
 	UserData       string
+	SysType        string
 	CleanupTimeout time.Duration
 
 	doCleanup bool
@@ -65,6 +66,7 @@ func (s *StepCreateInstance) Run(_ context.Context, state multistep.StateBag) mu
 		Processors:  core.Float64Ptr(0.5),
 		ServerName:  &s.InstanceName,
 		StorageType: *imageRef.StorageType,
+		SysType:     s.SysType,
 		UserData:    b64.StdEncoding.EncodeToString([]byte(s.UserData)),
 	}
 	ui.Say("Creating Instance")
