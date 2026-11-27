@@ -5,17 +5,11 @@ package common
 
 import (
 	"fmt"
-	"slices"
-	"strings"
 	"time"
 
 	"github.com/hashicorp/packer-plugin-sdk/communicator"
 	"github.com/hashicorp/packer-plugin-sdk/template/interpolate"
 )
-
-// could be technically fetched from the DS, but feels like overkill for a non-required field that only few scenarios
-// need to set
-const allowedSystemTypes string = "s922 e980 s1022 e1050 e1080 s1122 e1150 e1180"
 
 type Source struct {
 	Name       string      `mapstructure:"name" required:"false"`
@@ -86,11 +80,6 @@ func (c *RunConfig) Prepare(ctx *interpolate.Context) []error {
 	// Validate cleanup timeout format
 	if _, err := time.ParseDuration(c.CleanupTimeout); err != nil {
 		errs = append(errs, fmt.Errorf("invalid cleanup_timeout format: %s (use format like '10m', '15m30s')", c.CleanupTimeout))
-	}
-
-	// Validate SystemType against a list of all allowed ibm types
-	if c.SystemType != "" && !slices.Contains(strings.Fields(allowedSystemTypes), c.SystemType) {
-		errs = append(errs, fmt.Errorf("unsupported system type %s, only %s are supported", c.SystemType, allowedSystemTypes))
 	}
 
 	return errs
