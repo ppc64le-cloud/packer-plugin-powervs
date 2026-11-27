@@ -113,7 +113,7 @@ func (b *Builder) Run(ctx context.Context, ui packer.Ui, hook packer.Hook) (pack
 			InstanceName:   b.config.InstanceName,
 			KeyPairName:    b.config.KeyPairName,
 			UserData:       b.config.UserData,
-			SysType:        b.config.SystemType,
+			SystemType:     b.config.SystemType,
 			CleanupTimeout: cleanupTimeout,
 		},
 		&communicator.StepConnect{
