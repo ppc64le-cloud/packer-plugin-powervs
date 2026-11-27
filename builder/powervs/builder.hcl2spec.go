@@ -29,6 +29,7 @@ type FlatConfig struct {
 	KeyPairName               *string             `mapstructure:"key_pair_name" required:"true" cty:"key_pair_name" hcl:"key_pair_name"`
 	SubnetIDs                 []string            `mapstructure:"subnet_ids" required:"false" cty:"subnet_ids" hcl:"subnet_ids"`
 	UserData                  *string             `mapstructure:"user_data" required:"false" cty:"user_data" hcl:"user_data"`
+	SystemType                *string             `mapstructure:"system_type" required:"false" cty:"system_type" hcl:"system_type"`
 	DHCPNetwork               *bool               `mapstructure:"dhcp_network" required:"false" cty:"dhcp_network" hcl:"dhcp_network"`
 	Source                    *common.FlatSource  `mapstructure:"source" required:"true" cty:"source" hcl:"source"`
 	Capture                   *common.FlatCapture `mapstructure:"capture" required:"true" cty:"capture" hcl:"capture"`
@@ -79,6 +80,8 @@ type FlatConfig struct {
 	WinRMNoProxy              *bool               `mapstructure:"winrm_no_proxy" cty:"winrm_no_proxy" hcl:"winrm_no_proxy"`
 	WinRMPort                 *int                `mapstructure:"winrm_port" cty:"winrm_port" hcl:"winrm_port"`
 	WinRMTimeout              *string             `mapstructure:"winrm_timeout" cty:"winrm_timeout" hcl:"winrm_timeout"`
+	WinRMRetryInterval        *string             `mapstructure:"winrm_retry_interval" cty:"winrm_retry_interval" hcl:"winrm_retry_interval"`
+	WinRMConnectTimeout       *string             `mapstructure:"winrm_connect_timeout" cty:"winrm_connect_timeout" hcl:"winrm_connect_timeout"`
 	WinRMUseSSL               *bool               `mapstructure:"winrm_use_ssl" cty:"winrm_use_ssl" hcl:"winrm_use_ssl"`
 	WinRMInsecure             *bool               `mapstructure:"winrm_insecure" cty:"winrm_insecure" hcl:"winrm_insecure"`
 	WinRMUseNTLM              *bool               `mapstructure:"winrm_use_ntlm" cty:"winrm_use_ntlm" hcl:"winrm_use_ntlm"`
@@ -114,6 +117,7 @@ func (*FlatConfig) HCL2Spec() map[string]hcldec.Spec {
 		"key_pair_name":                &hcldec.AttrSpec{Name: "key_pair_name", Type: cty.String, Required: false},
 		"subnet_ids":                   &hcldec.AttrSpec{Name: "subnet_ids", Type: cty.List(cty.String), Required: false},
 		"user_data":                    &hcldec.AttrSpec{Name: "user_data", Type: cty.String, Required: false},
+		"system_type":                  &hcldec.AttrSpec{Name: "system_type", Type: cty.String, Required: false},
 		"dhcp_network":                 &hcldec.AttrSpec{Name: "dhcp_network", Type: cty.Bool, Required: false},
 		"source":                       &hcldec.BlockSpec{TypeName: "source", Nested: hcldec.ObjectSpec((*common.FlatSource)(nil).HCL2Spec())},
 		"capture":                      &hcldec.BlockSpec{TypeName: "capture", Nested: hcldec.ObjectSpec((*common.FlatCapture)(nil).HCL2Spec())},
@@ -164,6 +168,8 @@ func (*FlatConfig) HCL2Spec() map[string]hcldec.Spec {
 		"winrm_no_proxy":               &hcldec.AttrSpec{Name: "winrm_no_proxy", Type: cty.Bool, Required: false},
 		"winrm_port":                   &hcldec.AttrSpec{Name: "winrm_port", Type: cty.Number, Required: false},
 		"winrm_timeout":                &hcldec.AttrSpec{Name: "winrm_timeout", Type: cty.String, Required: false},
+		"winrm_retry_interval":         &hcldec.AttrSpec{Name: "winrm_retry_interval", Type: cty.String, Required: false},
+		"winrm_connect_timeout":        &hcldec.AttrSpec{Name: "winrm_connect_timeout", Type: cty.String, Required: false},
 		"winrm_use_ssl":                &hcldec.AttrSpec{Name: "winrm_use_ssl", Type: cty.Bool, Required: false},
 		"winrm_insecure":               &hcldec.AttrSpec{Name: "winrm_insecure", Type: cty.Bool, Required: false},
 		"winrm_use_ntlm":               &hcldec.AttrSpec{Name: "winrm_use_ntlm", Type: cty.Bool, Required: false},

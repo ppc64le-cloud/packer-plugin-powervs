@@ -4,6 +4,11 @@
 
 - `user_data` (string) - User Data
 
+- `system_type` (string) - SystemType is the PowerVS system (machine) type used when creating the build instance,
+  for example "s922" or "e980". If unset, the PowerVS API default is used (currently s922).
+  Not every system type is available in every region or datacenter, so set this when
+  the default is unavailable in your target region.
+
 - `dhcp_network` (bool) - DHCP Network
 
 - `cleanup_timeout` (string) - CleanupTimeout specifies the maximum time to wait for instance deletion during cleanup.

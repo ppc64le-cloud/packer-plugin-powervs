@@ -25,6 +25,7 @@ type StepCreateInstance struct {
 	InstanceName   string
 	KeyPairName    string
 	UserData       string
+	SystemType     string
 	CleanupTimeout time.Duration
 
 	doCleanup bool
@@ -32,7 +33,12 @@ type StepCreateInstance struct {
 
 func (s *StepCreateInstance) Run(_ context.Context, state multistep.StateBag) multistep.StepAction {
 	ui := state.Get("ui").(packersdk.Ui)
-	ui.Say("Creating Instance")
+
+	systemType := "default"
+	if s.SystemType != "" {
+		systemType = s.SystemType
+	}
+	ui.Say(fmt.Sprintf("Creating Instance with %s system type", systemType))
 
 	instanceClient := state.Get("instanceClient").(*instance.IBMPIInstanceClient)
 
@@ -65,6 +71,7 @@ func (s *StepCreateInstance) Run(_ context.Context, state multistep.StateBag) mu
 		Processors:  core.Float64Ptr(0.5),
 		ServerName:  &s.InstanceName,
 		StorageType: *imageRef.StorageType,
+		SysType:     s.SystemType,
 		UserData:    b64.StdEncoding.EncodeToString([]byte(s.UserData)),
 	}
 	ui.Say("Creating Instance")
