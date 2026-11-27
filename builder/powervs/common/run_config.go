@@ -49,14 +49,14 @@ type RunConfig struct {
 	UserData     string   `mapstructure:"user_data" required:"false"`
 
 	// SystemType is the PowerVS system (machine) type used when creating the build instance,
-        // for example "s922" or "e980". If unset, the PowerVS API default is used (currently s922).
-        // Not every system type is available in every region or datacenter, so set this when
-        // the default is unavailable in your target region.
-	SystemType   string   `mapstructure:"system_type" required:"false"`
+	// for example "s922" or "e980". If unset, the PowerVS API default is used (currently s922).
+	// Not every system type is available in every region or datacenter, so set this when
+	// the default is unavailable in your target region.
+	SystemType string `mapstructure:"system_type" required:"false"`
 
-	DHCPNetwork  bool     `mapstructure:"dhcp_network" required:"false"`
-	Source       Source   `mapstructure:"source" required:"true"`
-	Capture      Capture  `mapstructure:"capture" required:"true"`
+	DHCPNetwork bool    `mapstructure:"dhcp_network" required:"false"`
+	Source      Source  `mapstructure:"source" required:"true"`
+	Capture     Capture `mapstructure:"capture" required:"true"`
 
 	// CleanupTimeout specifies the maximum time to wait for instance deletion during cleanup.
 	// If the instance is not deleted within this time, cleanup will fail gracefully with a warning.

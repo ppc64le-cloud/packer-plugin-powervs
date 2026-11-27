@@ -34,7 +34,7 @@ type StepCreateInstance struct {
 func (s *StepCreateInstance) Run(_ context.Context, state multistep.StateBag) multistep.StepAction {
 	ui := state.Get("ui").(packersdk.Ui)
 
-	systemType := "default" 
+	systemType := "default"
 	if s.SystemType != "" {
 		systemType = s.SystemType
 	}
